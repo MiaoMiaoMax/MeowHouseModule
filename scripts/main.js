@@ -1,4 +1,4 @@
-import { world, ExplosionOptions, BlockLocation, MinecraftBlockTypes, MinecraftItemTypes } from "mojang-minecraft";
+import { world, ExplosionOptions, BlockLocation, MinecraftBlockTypes, ItemStack, MinecraftItemTypes } from "mojang-minecraft";
 function log(log){
     world.getDimension("overworld").runCommand(`say ` + log );
 } 
@@ -81,71 +81,91 @@ function blockBreak(m2){
         
         //连锁采集
         if(s == 1){
+            log(m2.player.selectedSlot);
+            log(m2.player.getComponent("inventory").container.getItem(m2.player.selectedSlot).id);
             let a = m2.brokenBlockPermutation.type.id;
             log(a);
             let b;
+            let c;
             switch(a){
                 case "minecraft:log" :
-                    b = [ 1, "old_log_type" ];
+                    b = [ 1, 1, "old_log_type" ];
+                    c = { item: [ MinecraftItemTypes.log ], oak: [ 0, 0 ], spruce: [ 0, 1 ], birch: [ 0, 2 ], jungle: [ 0, 3 ] };
                     break;
                 case "minecraft:log2" :
-                    b = [ 1, "new_log_type" ];
+                    b = [ 1, 1, "new_log_type" ];
+                    c = { item: [ MinecraftItemTypes.log2 ], acacia: [ 0, 0 ], dark_oak: [ 0, 1 ] };
                     break;
-                case "minecraft:wheat" :
-                    b = [ 2, "growth", 7 ];
-                    break;
+                    
                 case "minecraft:stone" :
-                    b = [ 3, "stone_type", "stone"]
+                    b = [ 1, 2, "stone_type" ];
+                    c = { block: [ MinecraftItemTypes.stone ], item : [ MinecraftItemTypes.stone, MinecraftItemTypes.cobblestone ], stone : [ 1, 0 ], granite : [ 0, 1 ], granite_smooth : [ 0, 2 ], diorite : [ 0, 3 ], diorite_smooth : [ 0, 4 ], andesite : [ 0, 5 ], andesite_smooth : [ 0, 6 ] };
+                    break;
+                    
+                case "minecraft:wheat" :
+                    b = [ 2, 3, "growth", 7 ];
+                    c = { };
+                    break;
+                    
+                case "minecraft:leaves" :
+                    b = [ 1, 4, "old_leaf_type" ];
+                    c = { block: [ MinecraftItemTypes.leaves ], oak: [ 0, 0 ], spruce: [ 0, 1 ], birch: [ 0, 2 ], jungle: [ 0, 3 ] };
+                    break;
+                case "minecraft:leaves2" :
+                    b = [ 1, 4, "new_leaf_type" ];
+                    c = { block: [ MinecraftItemTypes.leaves2 ], acacia: [ 0, 0 ], dark_oak: [ 0, 1 ]};
                     break;
                 default:
                     return;
             }
-            let c;
+            
             let d = [ m2.block.location ];
+            let f =c[m2.brokenBlockPermutation.getProperty(b[2]).value];
             let g = 0;
-            for(var i = 0; i < d.length && g < 40; i++){
-                let e = [ world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x, d[i].y + 1, d[i].z)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x + 1, d[i].y, d[i].z)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x, d[i].y, d[i].z + 1)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x - 1, d[i].y, d[i].z)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x, d[i].y, d[i].z - 1)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x, d[i].y - 1, d[i].z)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x + 1, d[i].y, d[i].z + 1)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x - 1, d[i].y, d[i].z + 1)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x + 1, d[i].y, d[i].z - 1)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x - 1, d[i].y, d[i].z - 1)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x + 1, d[i].y + 1, d[i].z)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x - 1, d[i].y + 1, d[i].z)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x + 1, d[i].y - 1, d[i].z)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x - 1, d[i].y - 1, d[i].z)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x, d[i].y + 1, d[i].z + 1)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x, d[i].y + 1, d[i].z - 1)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x, d[i].y - 1, d[i].z + 1)), world.getDimension(m2.block.dimension.id).getBlock(new BlockLocation(d[i].x, d[i].y - 1, d[i].z - 1)) ];
-                for(var j = 0; j < e.length && g < 40; j++){
-                    let h;
-                    if(e[j].id == a && d.indexOf(e[j].location) == -1){
+            let h = 80;
+            for(var i = 0; i < d.length && g < h; i++){
+                let e = [ new BlockLocation(d[i].x, d[i].y+1, d[i].z), new BlockLocation(d[i].x+1, d[i].y, d[i].z), new BlockLocation(d[i].x, d[i].y, d[i].z+1), new BlockLocation(d[i].x-1, d[i].y, d[i].z), new BlockLocation(d[i].x, d[i].y, d[i].z-1), new BlockLocation(d[i].x, d[i].y-1, d[i].z), new BlockLocation(d[i].x+1, d[i].y, d[i].z+1), new BlockLocation(d[i].x-1, d[i].y, d[i].z+1), new BlockLocation(d[i].x+1, d[i].y, d[i].z-1), new BlockLocation(d[i].x-1, d[i].y, d[i].z-1), new BlockLocation(d[i].x+1, d[i].y+1, d[i].z), new BlockLocation(d[i].x-1, d[i].y+1, d[i].z), new BlockLocation(d[i].x+1, d[i].y-1, d[i].z), new BlockLocation(d[i].x-1, d[i].y-1, d[i].z), new BlockLocation(d[i].x, d[i].y+1, d[i].z+1), new BlockLocation(d[i].x, d[i].y+1, d[i].z-1), new BlockLocation(d[i].x, d[i].y-1, d[i].z+1), new BlockLocation(d[i].x, d[i].y-1, d[i].z-1) ];
+                for(var j = 0; j < e.length && g < h; j++){
+                    if(world.getDimension(m2.block.dimension.id).getBlock(e[j]).id == a && d.findIndex( (_) => _.x === e[j].x && _.y === e[j].y && _.z === e[j].z) == -1){
                         switch(b[0]){
-                            case 0 :
-                                h = 0;
-                                break;
                             case 1 :
-                                if(e[j].permutation.getProperty(b[1]).value == m2.brokenBlockPermutation.getProperty(b[1]).value)h = 0;
+                                if(world.getDimension(m2.block.dimension.id).getBlock(e[j]).permutation.getProperty(b[2]).value == m2.brokenBlockPermutation.getProperty(b[2]).value){d.push(e[j]);world.getDimension(m2.block.dimension.id).runCommand(`setblock ` + e[j].x + ` ` + e[j].y + ` ` + e[j].z + ` air -1 replace`);g++;};
                                 break;
                             case 2 :
-                                // log(b[2]);
-                                // log(m2.brokenBlockPermutation.getProperty(b[1]).value);
-                                if(e[j].permutation.getProperty(b[1]).value == b[2] && m2.brokenBlockPermutation.getProperty(b[1]).value == b[2])h = 0;
-                                break;
-                            case 3 :
-                                if(e[j].permutation.getProperty(b[1]).value == m2.brokenBlockPermutation.getProperty(b[1]).value)h = 1;
+                                if(world.getDimension(m2.block.dimension.id).getBlock(e[j]).permutation.getProperty(b[2]).value == b[3] && m2.brokenBlockPermutation.getProperty(b[2]).value == b[3]){d.push(e[j]);world.getDimension(m2.block.dimension.id).runCommand(`setblock ` + e[j].x + ` ` + e[j].y + ` ` + e[j].z + ` air -1 replace`);g++;};
                                 break;
                         }
-                        switch(h){
-                            case 0 :
-                                d.push(e[j].location);
-                                world.getDimension(m2.block.dimension.id).runCommand(`setblock ` + e[j].location.x + ` ` + e[j].location.y + ` ` + e[j].location.z + ` air -1 destroy`);
-                                g++;
-                                // log(g);
-                                break;
-                            case 1 :
-                                d.push(e[j].location);
-                                world.getDimension(m2.block.dimension.id).runCommand(`setblock ` + e[j].location.x + ` ` + e[j].location.y + ` ` + e[j].location.z + ` air -1 replace`);
-                                log(e[j].permutation.getProperty(b[1]).value);
-                                let f = e[j].permutation.getProperty(b[1]).validValues.indexOf(e[j].permutation.getProperty(b[1]).value);
-                                log(f)
-                                let item = MinecraftItemTypes(b[3], 1, f)
-                                world.getDimension(m2.block.dimension.id).spawnItem(item,e[j].location)
-                                break;
+                        /*
+                        let f = e[j].permutation.getProperty(b[1]).validValues;
+                        log(f[0]);
+                        for(var k = 0; k < f.length; k++){
+                            log(f[k]);
+                            let f = e[j].permutation.getProperty(b[1]).validValues.indexOf(e[j].permutation.getProperty(b[1]).value);
                         }
+                        */
                     }
                 }
             }
-            if(g >= 40)log("链锁数目已到达上限");
+            /*
+            while(g > 0 && d.length > 0){
+                world.getDimension(m2.block.dimension.id).runCommand(`fill ` + d[0].x + ` ` + d[0].y + ` ` + d[0].z + ` ` + d[d.length-1].x + ` ` + d[d.length-1].y + ` ` + d[d.length-1].z + ` air -1 replace `+ a);
+                d = d.filter( (_) => world.getDimension(m2.block.dimension.id).getBlock(_).id === a)
+            }
+            */
+            if(g >= h)log("链锁数目已到达上限");
             if(g > 0)log("链锁方块:" + a + " 链锁数:" + g);
+            switch(b[1]){
+                case 1 :
+                    let items;
+                    while(g > 64){
+                        items = new ItemStack(c.item[f[0]], 64, f[1]);
+                        world.getDimension(m2.block.dimension.id).spawnItem(items, m2.block.location);
+                        g = g-64;
+                    }
+                    items = new ItemStack(c.item[f[0]], g, f[1]);
+                    world.getDimension(m2.block.dimension.id).spawnItem(items, m2.block.location);
+                    break;
+            }
         }
     //} catch(e) { log(e) };
 }
@@ -219,7 +239,7 @@ function explosion(m5){
         }
         const str = "§3dimension:§r" + m5.dimension.id + " §2x:" + parseInt(m5.source.location.x) + ", y:" + parseInt(m5.source.location.y) + ", z:" + parseInt(m5.source.location.z) + " §3source:§r" + m5.source.id + " §3radius:§r" + radius;
         log(str);
-        //world.getDimension(m5.dimension.id).createExplosion(explodeNoBlocksLoc, 15, explosionOptions);
+        // world.getDimension(m5.dimension.id).createExplosion(explodeNoBlocksLoc, 15, explosionOptions);
         m5.dimension.createExplosion(explodeNoBlocksLoc, radius, explosionOptions);
         m5.source.removeTag("explosion");
     } catch(e) { log(e) };
