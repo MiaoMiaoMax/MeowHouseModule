@@ -6,7 +6,7 @@
     http://creativecommons.org/licenses/by-nc-sa/4.0/..
 */
 
-import { world, ExplosionOptions, BlockLocation, MinecraftBlockTypes, ItemStack, MinecraftItemTypes, EntityQueryOptions, Location } from "mojang-minecraft";
+import { world, ExplosionOptions, BlockLocation, MinecraftBlockTypes, ItemStack, MinecraftItemTypes, EntityQueryOptions, Location, MinecraftEffectTypes } from "mojang-minecraft";
 
 /*+==================分==界==线==================+*/
 
@@ -231,8 +231,8 @@ function blockBreak(m2) {
         for (const queryNoThis of querys) {
             if (queryNoThis.nameTag == "§d§f§k§v§5§r§l§3刷新点§r" && queryNoThis.location.isNear(query.location, 0.4)) {
                 const nowTime = [getCurrentDate(), getCurrentTime()];
-                if(queryNoThis.hasTag("bedrock")){
-                    if (m2.brokenBlockPermutation.type.id == "minecraft:bedrock"){
+                if (queryNoThis.hasTag("bedrock")) {
+                    if (m2.brokenBlockPermutation.type.id == "minecraft:bedrock") {
                         try { m2.player.runCommand("scoreboard players reset @s timingB") } catch (e) { };
                         try { queryNoThis.runCommand("scoreboard players reset @s timingB") } catch (e) { };
                         queryNoThis.runCommand(`say @${m2.player.nameTag},为什么不见了`);
@@ -274,7 +274,7 @@ function blockBreak(m2) {
                 }
                 // log(`§2xp:§a${cache0}, §3升到下一级所需xp:§b${cache1}, §6玩家等级:§e${level3}`);
                 if (level3 < 100) m2.player.runCommand(`titleraw @s actionbar {"rawtext":[{"text":"§2经验:§a${cache0}/§b${cache1}, §6等级:§e${level3}"}]}`);
-                else m2.player.runCommand(`titleraw @s actionbar {"rawtext":[{"text":"§2经验:§a已满级, §6等级:§e${level3}"}]}`);
+                else m2.player.runCommand(`titleraw @s actionbar {"rawtext":[{"text":"§2经验:§a已满级, §6level:§e${level3}"}]}`);
 
                 if ((nowTime[1] - timing0) >= 1) { timing0 = 0; setScoreForEntity("timing0", queryNoThis, nowTime[1]); };
                 if (timing0 == 0) dfksj01(m2, nowTime, queryNoThis, level3, timing1, timing2, timing3);
@@ -294,14 +294,20 @@ function dfksj00(m2, level3) {
     if (level3 < 5) a = 0;
     else if (level3 < 10) a = 1;
     else a = 2;
-    const blocks = [["minecraft:log", 3, "old_log_type"], ["minecraft:log2", 1, "new_log_type"], ["minecraft:stone", 6, "stone_type"], ["minecraft:cobblestone", 0], ["minecraft:mossy_cobblestone", 0]];
+    const blocks = [
+        ["minecraft:log", 3, "old_log_type"],
+        ["minecraft:log2", 1, "new_log_type"],
+        ["minecraft:stone", 6, "stone_type"],
+        ["minecraft:cobblestone", 0],
+        ["minecraft:mossy_cobblestone", 0]
+    ]
     const l = [[1, 2, -1, 3, -1], [1, 2, 3, 4, -1], [1, 2, 3, 4, 5]];
     const random0 = getRndInteger(1, arrNonNegative(l[a]));
-    let random1 = getRndInteger(0, blocks[l[a].findIndex((_) => _ == random0)][1]);
+    const random1 = getRndInteger(0, blocks[l[a].findIndex((_) => _ == random0)][1]);
     log(blocks[l[a].findIndex((_) => _ == random0)][0]);
     let b = MinecraftBlockTypes.get(blocks[l[a].findIndex((_) => _ == random0)][0]).createDefaultBlockPermutation();
     if (random1 != 0) {
-        let c = b.getProperty(blocks[l[a].findIndex((_) => _ == random0)][2]);
+        const c = b.getProperty(blocks[l[a].findIndex((_) => _ == random0)][2]);
         b.getProperty(blocks[l[a].findIndex((_) => _ == random0)][2]).value = c.validValues[random1];
     }
     m2.block.setPermutation(b);
@@ -348,9 +354,15 @@ function dfksj01(m2, nowTime, queryNoThis, level3, timing1, timing2, timing3) {
     random1 = 1;    //awa
     log(random1);
     switch (random1) {
-        case 1: { if ((nowTime[1] - timing1) >= 1200) { timing1 = 0; setScoreForEntity("timing1", queryNoThis); }; if (timing1 == 0) dfksjE00(m2, nowTime, queryNoThis, level3); else dfksj00(m2, level3); break; };
-        case 2: { if ((nowTime[1] - timing2) >= 600) { timing2 = 0; setScoreForEntity("timing2", queryNoThis); }; if (timing2 == 0) dfksjC00(m2, nowTime, queryNoThis, level3); else dfksj00(m2, level3); break; };
-        case 3: { if ((nowTime[1] - timing3) >= 600) { timing3 = 0; setScoreForEntity("timing3", queryNoThis); }; if (timing3 == 0) dfksje00(m2, nowTime, queryNoThis, level3); else dfksj00(m2, level3); break; };
+        case 1:
+            if ((nowTime[1] - timing1) >= 1200) { timing1 = 0; setScoreForEntity("timing1", queryNoThis); };
+            if (timing1 == 0) dfksjE00(m2, nowTime, queryNoThis, level3); else dfksj00(m2, level3); break;
+        case 2:
+            if ((nowTime[1] - timing2) >= 600) { timing2 = 0; setScoreForEntity("timing2", queryNoThis); };
+            if (timing2 == 0) dfksjC00(m2, nowTime, queryNoThis, level3); else dfksj00(m2, level3); break;
+        case 3:
+            if ((nowTime[1] - timing3) >= 600) { timing3 = 0; setScoreForEntity("timing3", queryNoThis); };
+            if (timing3 == 0) dfksje00(m2, nowTime, queryNoThis, level3); else dfksj00(m2, level3); break;
         case 4: { dfksjB00(m2, nowTime, queryNoThis, level3); break; };
         case 5: { dfksj00(m2, level3); break; };
         default: { dfksj00(m2, level3); break; };
@@ -419,20 +431,20 @@ function dfksjE00(m2, nowTime, queryNoThis, level3) {/* 事件 */
         random0--;
         random1 = arr[r];
     }
-    random1 = 1;    //awa
+    random1 = 2;    //awa
     log(random1);
     let block;
     switch (random1) {
         case 1: { block = dfksjE10(m2, queryNoThis); break; };
-        // case 2: { block = dfksjE20(m2, queryNoThis); break; };
+        case 2: { block = dfksjE20(m2, queryNoThis); break; };
         // case 3: { block = dfksjE30(m2, queryNoThis); break; };
     }
     if (block) dfksj00(m2, level3);
 }
-function dfksjE01(m2, queryNoThis, i, events){
-    let i1 = () => { let la = [];i.forEach((_, i) => { if (_ > 0) la.push(i) }); return la }
+function dfksjE01(m2, queryNoThis, i, events) {
+    let i1 = () => { let la = []; i.forEach((_, i) => { if (_ > 0) la.push(i) }); return la }
     let random0 = getRndInteger(1, new Array(i).sort((a, b) => { return b - a }).shift(0, 0));
-    let random1;    
+    let random1;
     while (random0 >= 1) {
         let arr = i1();
         let r = getRndInteger(0, arr.length - 1);
@@ -444,9 +456,9 @@ function dfksjE01(m2, queryNoThis, i, events){
     log(random1);
     return events[random1](m2, queryNoThis);
 }
-function dfksjE10(m2, queryNoThis){
+function dfksjE10(m2, queryNoThis) {
     addScoreForEntity("cache0", m2.player);
-    let i = [ 1, 2 ];
+    let i = [1, 2];
     let events = [
         dfksjE_bedrock,/* 基岩 */
         dfksjE_justiceFromHeaven/* 天降正义 */
@@ -467,7 +479,7 @@ function dfksjE_bedrock(m2, queryNoThis) {
     queryNoThis.addTag("bedrock");
     return false;
 }
-function dfksjE_justiceFromHeaven(m2, queryNoThis){
+function dfksjE_justiceFromHeaven(m2, queryNoThis) {
     queryNoThis.runCommand(`say @${m2.player.name},天降正义`);
     const explosionOptions = new ExplosionOptions();
     explosionOptions.breaksBlocks = false;
@@ -479,6 +491,32 @@ function dfksjE_justiceFromHeaven(m2, queryNoThis){
     return true;
 }
 
+function dfksjE20(m2, queryNoThis) {
+    addScoreForEntity("cache0", m2.player);
+    let i = [1, 3];
+    let events = [
+        dfksjE_bigSurprise,/* 有惊有险 */
+        dfksjE_zombieSiege/* 僵尸围岛 */
+    ]
+    return dfksjE01(m2, queryNoThis, i, events);
+}
+function dfksjE_bigSurprise(m2, queryNoThis) {
+    queryNoThis.runCommand(`say @${m2.player.name},《大惊喜》`);
+    const creeper = m2.dimension.spawnEntity("minecraft:creeper<minecraft:become_charged>", m2.player.location);
+    creeper.triggerEvent("minecraft:start_exploding");
+    return true;
+}
+function dfksjE_zombieSiege(m2, queryNoThis) {
+    queryNoThis.runCommand(`say @${m2.player.name},僵尸围岛`);
+    for (let i = 0; i < 10; i++) {
+        const zombie = m2.dimension.spawnEntity("minecraft:zombie", m2.player.location);
+        zombie.addEffect(MinecraftEffectTypes.fireResistance, 12000, 0, false);
+    }
+    // m2.dimension.spawnEntity("iron_golem", m2.player.location);
+    // m2.dimension.spawnEntity("iron_golem", m2.player.location);
+    // m2.dimension.spawnEntity("iron_golem", m2.player.location);
+    return true;
+}
 
 function dfksjC00(m2, nowTime, queryNoThis, level3) {/* 箱子 */
     setScoreForEntity("timing2", queryNoThis, nowTime[1])
@@ -524,7 +562,7 @@ function dfksje00(m2, nowTime, queryNoThis, level3) {/* 生物 */
         random0 -= a;
         return b[r];
     }
-    
+
     while (random0 >= 10) random1 = l(10);
     while (random0 >= 5) random1 = l(5);
     while (random0 >= 1) random1 = l(1);
