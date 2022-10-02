@@ -1,13 +1,7 @@
 # MeowHouseModule
-
-> ## 主目录
->
-> * [关于这个模块](#关于这个模块)
-> * [食用方法](#食用方法)
+>Only Chinese versions available. (This sentence is machine-translated)
 
 > ## 关于这个模块
-> ![pack_icon](./pack_icon.png)
->
 > 本模块服务于[MeowHouse](https://github.com/MiaoMiaoMax/MeowHouse)(喵喵屋)
 >
 > 由 [GameTest Framework](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/)(GT框架) 与 [Functions](https://learn.microsoft.com/en-us/minecraft/creator/documents/functionsintroduction)(函数) 构建
@@ -17,23 +11,15 @@
 > 目前模块主体为 [单方块核心](https://afdian.net/a/CNQuanYeCha)
 >
 > 还有一些其他零零碎碎的小功能
+> * 防实体爆炸破坏方块
+> * 活塞推拉方块过滤(防“刷沙机”等)
 >
 > *萌新造的破轮子(*
 
-> ## 食用方法
->> ### 方法目录
->>
->> * [前提](#前提)
->> * [关于存档的作弊选项](#关于存档的作弊选项)
+> 本作品采用知识共享署名-非商业性-相同方式共享 4.0 国际许可协议进行许可。  
+> 要查看此许可证的副本，请访问 https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh
 >
->> ### 前提：
->> * 前置addon [[MeowHouse](https://github.com/MiaoMiaoMax/MeowHouse)(喵喵屋)] 是不可或缺的；
->> * 游戏版本：1.19.30（Bedrock）；
->> * 游戏存档需要开实验玩法（应用测试框架，等）；
->
->> ### 关于存档的作弊选项
->>
->> 游戏存档的作弊选项可以不开，但在应用了行为包（本包属于）的存档，  
->> 成就已是被禁用，无法获得成就，所以推荐启用作弊，以获得更好的体验；
->
-> 未完待续
+> This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.  
+> To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
+
+> 食用方法详见[wiki](https://github.com/MiaoMiaoMax/MeowHouseModule/wiki)
