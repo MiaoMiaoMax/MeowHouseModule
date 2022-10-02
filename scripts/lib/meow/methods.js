@@ -2,8 +2,8 @@
     本作品采用知识共享署名-非商业性-相同方式共享 4.0 国际许可协议进行许可。 要查看此许可证的副本，请访问
     https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh
 
-    This work is licensed under the Creative Commons 署名-非商业性使用-相同方式共享 4.0 国际 License. To view a copy of this license, visit
-    http://creativecommons.org/licenses/by-nc-sa/4.0/..
+    This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit 
+    http://creativecommons.org/licenses/by-nc-sa/4.0/
 */
 
 import { world } from "mojang-minecraft";
@@ -13,11 +13,11 @@ import { world } from "mojang-minecraft";
 //log
 const log = (a) => {
     world.say(`[§3MeowHouseModule§r] ${String(a)}`);
-    //world.getDimension("overworld").runCommand(`say ${a}`); //旧写法
+    //world.getDimension("overworld").runCommand(`say ${a}`); //1.19.0旧写法
 }
 
 //ScoreForName
-const tyrScoreForName = (a, b, getLog) => {
+const tyrScoreForName = (a, b, getLog = false) => {
     if (!world.scoreboard.getObjectives().find((_) => _.id == a)) {
         if (getLog) log(`tyrScore:错误,目标记分板(${a})不存在`);
         return "ScoreAU";
@@ -54,7 +54,7 @@ const addScoreForName = (a, b, c = 1, getLog = false, isReturn = false) => {
 }
 
 //ScoreForEntity
-const tyrScoreForEntity = (a, b, getLog) => {
+const tyrScoreForEntity = (a, b, getLog = false) => {
     if (!world.scoreboard.getObjectives().find((_) => _?.id == a)) {
         if (getLog) log(`tyrScore:错误,目标记分板(${a})不存在`);
         return "ScoreAU";

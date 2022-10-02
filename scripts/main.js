@@ -2,8 +2,8 @@
     本作品采用知识共享署名-非商业性-相同方式共享 4.0 国际许可协议进行许可。 要查看此许可证的副本，请访问
     https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh
 
-    This work is licensed under the Creative Commons 署名-非商业性使用-相同方式共享 4.0 国际 License. To view a copy of this license, visit
-    http://creativecommons.org/licenses/by-nc-sa/4.0/..
+    This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License. To view a copy of this license, visit 
+    http://creativecommons.org/licenses/by-nc-sa/4.0/
 */
 
 import * as mc from "mojang-minecraft";
@@ -36,7 +36,6 @@ mc.world.events.beforeExplosion.subscribe(m5 => {
     explosion(m5);
     return m5;
 })
-
 mc.world.events.beforeItemUseOn.subscribe(m6 => {
     beforeItemUseOn(m6);
     return m6;
@@ -298,7 +297,6 @@ function dfksj01(m2, nowTime, queryNoThis, level3, timing1, timing2, timing3) {
     // if(random0 >= l1[i][0] && random0 <= l1[i][1] && timing3 != 0){dfksj00(m2, level3);meow.methods.log("miao");}
 }
 
-
 function dfksjE00(m2, nowTime, queryNoThis, level3) {/* 事件 */
     // meow.methods.setScoreForEntity("timing1", queryNoThis, nowTime[1]);
     meow.methods.addScoreForEntity("cache0", m2.player);
@@ -421,7 +419,6 @@ function dfksjC00(m2, nowTime, queryNoThis, level3) {/* 宝箱 */
         // case 2: { dfksjC20(m2); break; };
         // case 3: { dfksjC30(m2); break; };
     }
-
 }
 function dfksjC01(m2, loots, random0Max, random0Min = 1) {/* 宝箱-随机模块 */
     let random0 = meow.methods.getRndInteger(random0Min, random0Max);
@@ -456,7 +453,6 @@ function dfksjC01(m2, loots, random0Max, random0Min = 1) {/* 宝箱-随机模块
 function dfksjC10(m2) {
     dfksjC01(m2, meow.theChests.chests1(), 1);
 }
-
 
 function dfksje00(m2, nowTime, queryNoThis, level3) {/* 生物 */
     // meow.methods.setScoreForEntity("timing3", queryNoThis, nowTime[1]);
@@ -497,7 +493,6 @@ function dfksje00(m2, nowTime, queryNoThis, level3) {/* 生物 */
         random0 -= a;
         return b[r];
     }
-
     while (random0 >= 10) random1 = l(10);
     while (random0 >= 5) random1 = l(5);
     while (random0 > 0) random1 = l(1);
@@ -548,7 +543,6 @@ function dfksje30(m2) {/* 下界 */
 function dfksje40(m2) {/* 末地 */
     dfksje01(m2, meow.theEntitys.entitys4(), 5, 1, 900);
 }
-
 
 function dfksjB00(m2, nowTime, queryNoThis, level3) {/* 方块 */
     let i;
@@ -602,10 +596,10 @@ function dfksjB00(m2, nowTime, queryNoThis, level3) {/* 方块 */
             if (Number(threshold2.toString().slice(6, 8)) < 15) dfksjB10(m2, queryNoThis); /* meow.methods.log(`好，${threshold2}`); */
             else dfksj00(m2, level3);
             break;
-        case 2: { dfksjB20(m2, queryNoThis); break; };
-        case 3: { dfksjB30(m2, queryNoThis); break; };
-        case 4: { dfksjB40(m2, queryNoThis); break; };
-        case 5: { dfksjB50(m2, queryNoThis); break; };
+        case 2: { dfksjB20(m2); break; };
+        case 3: { dfksjB30(m2); break; };
+        case 4: { dfksjB40(m2); break; };
+        case 5: { dfksjB50(m2); break; };
         default: { dfksj00(m2, level3); break; };
     }
 }
@@ -632,16 +626,16 @@ function dfksjB10(m2, queryNoThis) {/* 贵重方块 */
     meow.methods.addScoreForEntity("cache0", m2.player);
     dfksjB01(m2, meow.theBlocks.blocks1(), 3);
 }
-function dfksjB20(m2, queryNoThis) {/* 矿物 */
+function dfksjB20(m2) {/* 矿物 */
     dfksjB01(m2, meow.theBlocks.blocks2(), 12, 3);
 }
-function dfksjB30(m2, queryNoThis) {/* 主世界 */
+function dfksjB30(m2) {/* 主世界 */
     dfksjB01(m2, meow.theBlocks.blocks3(), 10, 4);
 }
-function dfksjB40(m2, queryNoThis) {/* 下界 */
+function dfksjB40(m2) {/* 下界 */
     dfksjB01(m2, meow.theBlocks.blocks4(), 8, 2);
 }
-function dfksjB50(m2, queryNoThis) {/* 末地 */
+function dfksjB50(m2) {/* 末地 */
     dfksjB01(m2, meow.theBlocks.blocks5(), 3);
 }
 
