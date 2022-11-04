@@ -4,6 +4,8 @@
 > ## 关于这个模块
 > 本模块服务于[MeowHouse](https://github.com/MiaoMiaoMax/MeowHouse)(喵喵屋)
 >
+> #### 目前适配游戏版本为：1.19.40
+>
 > 由 [GameTest Framework](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/)(GT框架) 与 [Functions](https://learn.microsoft.com/en-us/minecraft/creator/documents/functionsintroduction)(函数) 构建
 >
 > 你可以关注作者bilibli平台 [CNQuanYeCha](https://space.bilibili.com/1968985335) 的动态来获得相关消息

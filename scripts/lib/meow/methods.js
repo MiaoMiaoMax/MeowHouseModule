@@ -6,14 +6,14 @@
     http://creativecommons.org/licenses/by-nc-sa/4.0/
 */
 
-import { world } from "mojang-minecraft";
+import { world } from "@minecraft/server";
 
 /*+==================分==界==线==================+*/
 
 //log
 const log = (a) => {
-    world.say(`[§3MeowHouseModule§r] ${String(a)}`);
-    //world.getDimension("overworld").runCommand(`say ${a}`); //1.19.0旧写法
+    world.say(`[§3MeowHouseModule§r] ${String(a)}`);                    //GT 1.0.0-beta 新写法
+    // world.getDimension("overworld").runCommandAsync(`say ${String(a)}`);     //GT 0.1.0 旧写法
 }
 
 //ScoreForName
@@ -42,13 +42,13 @@ const getScoreForName = (a, b, getLog = false, rectify = false, c = 0) => {
 }
 const setScoreForName = (a, b, score = 0, getLog = false) => {
     if (tyrScoreForName(a, b, getLog) == "ScoreAU") return;
-    world.getDimension("overworld").runCommand(`scoreboard players set ${b} ${a} ${score}`);
+    world.getDimension("overworld").runCommandAsync(`scoreboard players set ${b} ${a} ${score}`);
     if (getLog) log(`setScore:将目标对象(${b})在目标记分板(${a})中的分数设为(${score})`);
 }
 const addScoreForName = (a, b, c = 1, getLog = false, isReturn = false) => {
     if (tyrScoreForName(a, b, getLog) == "ScoreAU") return log(`addScore:错误,目标记分板(${a})不存在`);
     const score = getScoreForName(a, b, false, true);
-    world.getDimension("overworld").runCommand(`scoreboard players add ${b} ${a} ${c}`);
+    world.getDimension("overworld").runCommandAsync(`scoreboard players add ${b} ${a} ${c}`);
     if (getLog) log(`addScore:目标对象(${b})在目标记分板(${a})中的分数现为(${score}+${c}=${score + c})`);
     if (isReturn) return score;
 }
@@ -79,13 +79,13 @@ const getScoreForEntity = (a, b, getLog = false, rectify = false, c = 0) => {
 }
 const setScoreForEntity = (a, b, score = 0, getLog = false) => {
     if (tyrScoreForEntity(a, b, getLog) == "ScoreAU") return;
-    b.runCommand(`scoreboard players set @s ${a} ${score}`);
+    b.runCommandAsync(`scoreboard players set @s ${a} ${score}`);
     if (getLog) log(`setScore:将目标对象(${b, id})在目标记分板(${a})中的分数设为(${score})`);
 }
 const addScoreForEntity = (a, b, c = 1, getLog = false, isReturn = false) => {
     if (tyrScoreForEntity(a, b, getLog) == "ScoreAU") return log(`addScore:错误,目标记分板(${a})不存在`);
     const score = getScoreForEntity(a, b, false, true);
-    b.runCommand(`scoreboard players add @s ${a} ${c}`);
+    b.runCommandAsync(`scoreboard players add @s ${a} ${c}`);
     if (getLog) log(`addScore:目标对象(${b.id})在目标记分板(${a})中的分数现为(${score}+${c}=${score + c})`);
     if (isReturn) return score;
 }
