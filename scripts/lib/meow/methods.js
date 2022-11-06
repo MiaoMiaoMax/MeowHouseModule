@@ -113,18 +113,15 @@ const getNowTime = () => {
     if (now.getSeconds() === 0) timeS = `00`;
     else if (now.getSeconds() < 10) timeS = `0${now.getSeconds()}`;
     else timeS = `${now.getSeconds()}`;
-    let time = [timeY, timeM, timeD, timeH, timem, timeS];
-    return time;
+    return [timeY, timeM, timeD, timeH, timem, timeS];
 }
 const getCurrentDate = () => {
     let now = getNowTime();
-    let time = now[0] + now[1] + now[2];
-    return time;
+    return now[0] + now[1] + now[2];
 }
 const getCurrentTime = () => {
     let now = getNowTime();
-    let time = now[1] + now[2] + now[3] + now[4] + now[5];
-    return time;
+    return now[1] + now[2] + now[3] + now[4] + now[5];
 }
 
 //关于数值的相关操作

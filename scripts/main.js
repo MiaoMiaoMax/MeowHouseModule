@@ -12,7 +12,7 @@ import * as meow from "./lib/index.js";
 /*+==================分==界==线==================+*/
 
 const world = mc.world;
-const logs = true;
+const logs = true; //log开关
 const log = (_) => { if (logs) meow.methods.log(_) };
 
 /*+==================分==界==线==================+*/
@@ -76,12 +76,6 @@ world.events.beforeItemUse.subscribe(meowEvent => {
 
 /*+==================分==界==线==================+*/
 
-// function ticks(meowEvent) {
-    
-// }
-
-/*+==================分==界==线==================+*/
-
 function pos(meowEvent) {
     let x = parseInt(meowEvent.sender.location.x);
     let y = parseInt(meowEvent.sender.location.y);
@@ -97,7 +91,7 @@ function command(meowEvent) {
             case "t":
             case "test":
                 meow.methods.log(`§fMeowHouseModule正在运行,请求来源:§3${meowEvent.sender.name}`);
-                
+
                 // mc.world.setDynamicProperty("testNum", 123);
                 // mc.world.setDynamicProperty("testVal", "hhh");
                 // mc.world.setDynamicProperty("testBool", true);
@@ -125,7 +119,7 @@ function command(meowEvent) {
                     try {
                         let item = new mc.ItemStack(a[i], 1, 0);
                         meowEvent.sender.dimension.spawnItem(item, meowEvent.sender.location);
-                    } catch(e) {log(e)};
+                    } catch (e) { log(e) };
                 }
                 /* 
                 * try-1：
@@ -150,45 +144,40 @@ function command(meowEvent) {
 /*+==================分==界==线==================+*/
 
 function blockBreak(meowEvent) {
-    // const meowChain = mc.world.getDynamicProperty("meowChain");
-    // if (meowChain == true) {
-    //     mc.world.setDynamicProperty("meowChain", false);
-    //     mc.world.events.tick.subscribe(() => {
-    //         meowChains(meowEvent);
-    //     })
-    // }
-    meow.methods.addScoreForEntity("level0", meowEvent.player);
+    // log("awa")
+    const player = meowEvent.player;
+    meow.methods.addScoreForEntity("level0", player);
     if (meowEvent.dimension.getBlock(new mc.BlockLocation(meowEvent.block.x, meowEvent.block.y - 1, meowEvent.block.z)).typeId == "meow:chaos_recloser") {
         const entityIntensify = {
-            type:"meow:meow_mod",
-            name:"§d§f§k§v§5§r§l§3刷新点§r",
-            location:new mc.Location(meowEvent.block.x + 0.5, meowEvent.block.y + 1.5, meowEvent.block.z + 0.5),
-            closest:1,
-            maxDistance:0.3
+            type: "meow:meow_mod",
+            name: "§d§f§k§v§5§r§l§3刷新点§r",
+            location: new mc.Location(meowEvent.block.x + 0.5, meowEvent.block.y + 1.5, meowEvent.block.z + 0.5),
+            closest: 1,
+            maxDistance: 0.3
         }
         // 上面是 GT 1.0.0-beta 新写法，下面是 GT 0.1.0 旧写法
-       /*  const entityIntensify = new EntityQueryOptions();
-        entityIntensify.type = "meow:meow_mod";
-        entityIntensify.name = "§d§f§k§v§5§r§l§3刷新点§r";
-        entityIntensify.location = new Location(meowEvent.block.x + 0.5, meowEvent.block.y + 1.5, meowEvent.block.z + 0.5);
-        entityIntensify.closest = 1;
-        entityIntensify.maxDistance = 0.3; */
+        /*  const entityIntensify = new EntityQueryOptions();
+         entityIntensify.type = "meow:meow_mod";
+         entityIntensify.name = "§d§f§k§v§5§r§l§3刷新点§r";
+         entityIntensify.location = new Location(meowEvent.block.x + 0.5, meowEvent.block.y + 1.5, meowEvent.block.z + 0.5);
+         entityIntensify.closest = 1;
+         entityIntensify.maxDistance = 0.3; */
         const query = meowEvent.dimension.getEntities(entityIntensify);
         for (const queryNoThis of query) {
-            log("id: "+meowEvent.brokenBlockPermutation.type.id);
-            log("tag: "+queryNoThis.getTags().toString());
+            log("id: " + meowEvent.brokenBlockPermutation.type.id);
+            log("tag: " + queryNoThis.getTags().toString());
             const nowTime = [meow.methods.getCurrentDate(), meow.methods.getCurrentTime()];
             const playerIntensify = {
-                type:"minecraft:player",
-                name:meowEvent.player.name,
-                gameMode:"creative",
-                location:meowEvent.player.location,
-                closest:1,
-                maxDistance:0.1
+                type: "minecraft:player",
+                name: player.name,
+                gameMode: "creative",
+                location: player.location,
+                closest: 1,
+                maxDistance: 0.1
             }
             const playerQuery = meowEvent.dimension.getEntities(playerIntensify);
             const playerGMC = Array.from(playerQuery).length;
-            log("playerGMC: "+playerGMC);
+            log("playerGMC: " + playerGMC);
             if (queryNoThis.hasTag("bedrock")) {
                 if (meowEvent.brokenBlockPermutation.type.id == "minecraft:bedrock") {
                     if (!playerGMC) {
@@ -196,10 +185,10 @@ function blockBreak(meowEvent) {
                         meow.methods.setScoreForEntity("dotiledrops", queryNoThis);
                     }
                     try {
-                        meowEvent.player.runCommandAsync("scoreboard players reset @s timingB");
+                        player.runCommandAsync("scoreboard players reset @s timingB");
                         queryNoThis.runCommandAsync("scoreboard players reset @s timingB");
                     } catch (e) { };
-                    queryNoThis.runCommandAsync(`say @${meowEvent.player.nameTag},为什么不见了`);
+                    queryNoThis.runCommandAsync(`say @${player.nameTag},为什么不见了`);
                 }
                 queryNoThis.removeTag("bedrock");
             }
@@ -212,11 +201,10 @@ function blockBreak(meowEvent) {
             }
             // if(queryNoThis.hasTag("air"))return;
             // queryNoThis.addTag("air");
-            // log(meowEvent.player.name+" §3awa");
-            meow.methods.addScoreForEntity("level1", meowEvent.player);
-            let cache0 = meow.methods.getScoreForEntity("cache0", meowEvent.player, false, true);
-            let cache1 = meow.methods.getScoreForEntity("cache1", meowEvent.player, false, true, 1);
-            let level3 = meow.methods.getScoreForEntity("level3", meowEvent.player, false, true);
+            meow.methods.addScoreForEntity("level1", player);
+            let cache0 = meow.methods.getScoreForEntity("cache0", player, false, true);
+            let cache1 = meow.methods.getScoreForEntity("cache1", player, false, true, 1);
+            let level3 = meow.methods.getScoreForEntity("level3", player, false, true);
             let timing0 = meow.methods.getScoreForEntity("timing0", queryNoThis, false, true);
             let timing1 = meow.methods.getScoreForEntity("timing1", queryNoThis, false, true);
             let timing2 = meow.methods.getScoreForEntity("timing2", queryNoThis, false, true);
@@ -229,22 +217,21 @@ function blockBreak(meowEvent) {
                 case timing1:
                 case timing2:
                 case timing3:
-                    log("严重错误:检测到核心不完整,请重新初始化核心");
                     // queryNoThis.removeTag("air");
-                    return;
+                    return log("严重错误:检测到核心不完整,请重新初始化核心");
             }
             cache0++;
-            meow.methods.addScoreForEntity("cache0", meowEvent.player);
+            meow.methods.addScoreForEntity("cache0", player);
             if (cache0 >= cache1 && level3 < 100) {
                 level3++;
                 cache1 = Math.floor(cache1 + Math.sqrt(level3 * 2) + level3 * 9 + cache1 / (level3 * 2));
-                meow.methods.setScoreForEntity("cache0", meowEvent.player);
-                meow.methods.setScoreForEntity("cache1", meowEvent.player, cache1);
-                meow.methods.addScoreForEntity("level3", meowEvent.player);
-                // if(level3==1)meowEvent.player.runCommandAsync(`function MeowHouseModule/Achievement/first_block`);
+                meow.methods.setScoreForEntity("cache0", player);
+                meow.methods.setScoreForEntity("cache1", player, cache1);
+                meow.methods.addScoreForEntity("level3", player);
+                // if(level3==1)player.runCommandAsync(`function MeowHouseModule/Achievement/first_block`);
             }
-            if (level3 < 100) meowEvent.player.runCommandAsync(`titleraw @s actionbar {"rawtext":[{"text":"§2xp:§a${cache0}/§b${cache1}, §6level:§e${level3}"}]}`);
-            else meowEvent.player.runCommandAsync(`titleraw @s actionbar {"rawtext":[{"text":"§2xp:§a已满级, §6level:§e${level3}"}]}`);
+            if (level3 < 100) player.runCommandAsync(`titleraw @s actionbar {"rawtext":[{"text":"§2xp:§a${cache0}/§b${cache1}, §6level:§e${level3}"}]}`);
+            else player.runCommandAsync(`titleraw @s actionbar {"rawtext":[{"text":"§2xp:§a已满级, §6level:§e${level3}"}]}`);
             if ((nowTime[1] - timing0) >= 1) { timing0 = 0; meow.methods.setScoreForEntity("timing0", queryNoThis, nowTime[1]); };
             if (timing0 == 0) return dfksj01(meowEvent, nowTime, queryNoThis, level3, timing1, timing2, timing3);
             // if (timing0 != 0) return dfksj00(meowEvent, nowTime, queryNoThis, level3);
@@ -252,154 +239,112 @@ function blockBreak(meowEvent) {
             // queryNoThis.removeTag("air");
         }
     }
+    else return meowChains(player, meowEvent.brokenBlockPermutation, meowEvent.dimension, meowEvent.block.location);
 }
 
-// function meowChains(meowEvent) {
-//     log(meowEvent.player.selectedSlot);
-//     log(meowEvent.player.getComponent("inventory").container.getItem(meowEvent.player.selectedSlot)?.id ?? null);
-//     const blockId = meowEvent.brokenBlockPermutation.type.id;
-//     log(blockId);
-//     let bs;
-//     switch(blockId){
-//         case "实例" :
-//             bs = ["连锁方式", "生成方式", { property: "属性名" | null, items: ["物品英文名" | true] }];
-//             break;
-//         case "minecraft:log" :
-//             bs = [1, 1, { property: "old_log_type", items: [true] }];
-//             break;
-//         case "minecraft:log2" :
-//             bs = [1, 1, { property: "new_log_type", items: [true] }];
-//             break;
-            
-//         case "minecraft:stone" :
-//             bs = [ 1, 2, "stone_type" ];
-//             c = { block: [ mc.MinecraftItemTypes.stone ], item : [ mc.MinecraftItemTypes.stone, mc.MinecraftItemTypes.cobblestone ], stone : [ 1, 0 ], granite : [ 0, 1 ], granite_smooth : [ 0, 2 ], diorite : [ 0, 3 ], diorite_smooth : [ 0, 4 ], andesite : [ 0, 5 ], andesite_smooth : [ 0, 6 ] };
-//             break;
-            
-//         case "minecraft:wheat" :
-//             bs = [ 2, 3, "growth", 7 ];
-//             break;
-            
-//         case "minecraft:leaves" :
-//             bs = [ 1, 4, "old_leaf_type" ];
-//             c = { block: [ mc.MinecraftItemTypes.leaves ], oak: [ 0, 0 ], spruce: [ 0, 1 ], birch: [ 0, 2 ], jungle: [ 0, 3 ] };
-//             break;
-//         case "minecraft:leaves2" :
-//             bs = [ 1, 4, "new_leaf_type" ];
-//             c = { block: [ mc.MinecraftItemTypes.leaves2 ], acacia: [ 0, 0 ], dark_oak: [ 0, 1 ]};
-//             break;
-//         default:
-//             return;
-//     }
-//     let locations = [[meowEvent.block.x, meowEvent.block.y, meowEvent.block.z]];
-//     // let locations = [meowEvent.block.location];
-//     const blockProperty = meowEvent.brokenBlockPermutation.getProperty(bs[2].property);
-//     const blockValue = blockProperty.validValues.findIndex((_) => {_ = blockProperty.value});
-//     let chainsValue = 0;
-//     const chainsMax = 100;// 1tick链锁上限 1500
-//     for(let i = 0; i < locations.length && chainsValue < chainsMax; i++){
-//         let theLocations = [
-//             [locations[i][0], locations[i][1] + 1, locations[i][2]],
-//             [locations[i][0] + 1, locations[i][1], locations[i][2]],
-//             [locations[i][0], locations[i][1], locations[i][2] + 1],
-//             [locations[i][0] - 1, locations[i][1], locations[i][2]],
-//             [locations[i][0], locations[i][1], locations[i][2] - 1],
-//             [locations[i][0], locations[i][1] - 1, locations[i][2]],
-//             [locations[i][0] + 1, locations[i][1], locations[i][2] + 1],
-//             [locations[i][0] - 1, locations[i][1], locations[i][2] + 1],
-//             [locations[i][0] + 1, locations[i][1], locations[i][2] - 1],
-//             [locations[i][0] - 1, locations[i][1], locations[i][2] - 1],
-//             [locations[i][0] + 1, locations[i][1] + 1, locations[i][2]],
-//             [locations[i][0] - 1, locations[i][1] + 1, locations[i][2]],
-//             [locations[i][0] + 1, locations[i][1] - 1, locations[i][2]],
-//             [locations[i][0] - 1, locations[i][1] - 1, locations[i][2]],
-//             [locations[i][0], locations[i][1] + 1, locations[i][2] + 1],
-//             [locations[i][0], locations[i][1] + 1, locations[i][2] - 1],
-//             [locations[i][0], locations[i][1] - 1, locations[i][2] + 1],
-//             [locations[i][0], locations[i][1] - 1, locations[i][2] - 1]
-//         ]
-//         for(let j = 0; j < theLocations.length && chainsValue < chainsMax; j++){
-//             let testforblock = false;
-//             try { testforblock = meowEvent.dimension.runCommandAsync(`testforblock ${theLocations[j][0]} ${theLocations[j][1]} ${theLocations[j][2]} ${blockId} ${blockValue}`).matches } catch (e) { };
-//             if(testforblock && locations.findIndex( (_) => _[0] === theLocations[j][0] && _[1] === theLocations[j][1] && _[2] === theLocations[j][2]) == -1){
-//                 // log("awa");
-//                 // return;
-//                 switch(bs[0]){
-//                     case 1 :
-//                         locations.push(theLocations[j]);
-//                         meowEvent.dimension.runCommandAsync(`setblock ${theLocations[j][0]} ${theLocations[j][1]} ${theLocations[j][2]} air -1 replace`);
-//                         chainsValue++;
-//                         break;
-//                     case 2 :
-//                         if(meowEvent.dimension.getBlock(e[j]).permutation.getProperty(b[2]).value == b[3] && meowEvent.brokenBlockPermutation.getProperty(b[2]).value == b[3]){d.push(e[j]);meowEvent.dimension.runCommandAsync(`setblock ` + e[j].x + ` ` + e[j].y + ` ` + e[j].z + ` air -1 replace`);g++;};
-//                         break;
-//                 }
-//             }
-//         }
+function meowChains(player, block, dimension, location, chainsValues = 0) {
+    log(chainsValues);
+    log(player.selectedSlot);
+    log(player.getComponent("inventory").container.getItem(player.selectedSlot)?.id ?? null);
+    const blockId = block.type.id;
+    log(`${location.x} ${location.y} ${location.z}`);
+    log(blockId);
+    let bs;
+    switch (blockId) {
+        case "实例":
+            bs = ["连锁方式", "生成方式", { property: "属性名" | null, items: ["物品英文名" | true] }];
+            break;
+        case "minecraft:log":
+            bs = [1, 1, { property: "old_log_type", items: [true] }];
+            break;
+        case "minecraft:log2":
+            bs = [1, 1, { property: "new_log_type", items: [true] }];
+            break;
 
-//     //     let theLocations = [
-//     //         new mc.BlockLocation(locations[i].x, locations[i].y + 1, locations[i].z),
-//     //         new mc.BlockLocation(locations[i].x + 1, locations[i].y, locations[i].z),
-//     //         new mc.BlockLocation(locations[i].x, locations[i].y, locations[i].z + 1),
-//     //         new mc.BlockLocation(locations[i].x - 1, locations[i].y, locations[i].z),
-//     //         new mc.BlockLocation(locations[i].x, locations[i].y, locations[i].z - 1),
-//     //         new mc.BlockLocation(locations[i].x, locations[i].y - 1, locations[i].z),
-//     //         new mc.BlockLocation(locations[i].x + 1, locations[i].y, locations[i].z + 1),
-//     //         new mc.BlockLocation(locations[i].x - 1, locations[i].y, locations[i].z + 1),
-//     //         new mc.BlockLocation(locations[i].x + 1, locations[i].y, locations[i].z - 1),
-//     //         new mc.BlockLocation(locations[i].x - 1, locations[i].y, locations[i].z - 1),
-//     //         new mc.BlockLocation(locations[i].x + 1, locations[i].y + 1, locations[i].z),
-//     //         new mc.BlockLocation(locations[i].x - 1, locations[i].y + 1, locations[i].z),
-//     //         new mc.BlockLocation(locations[i].x + 1, locations[i].y - 1, locations[i].z),
-//     //         new mc.BlockLocation(locations[i].x - 1, locations[i].y - 1, locations[i].z),
-//     //         new mc.BlockLocation(locations[i].x, locations[i].y + 1, locations[i].z + 1),
-//     //         new mc.BlockLocation(locations[i].x, locations[i].y + 1, locations[i].z - 1),
-//     //         new mc.BlockLocation(locations[i].x, locations[i].y - 1, locations[i].z + 1),
-//     //         new mc.BlockLocation(locations[i].x, locations[i].y - 1, locations[i].z - 1)
-//     //     ]
-//     //     for(let j = 0; j < theLocations.length && chainsValue < chainsMax; j++){
-//     //         const theBlock = meowEvent.dimension.getBlock(theLocations[j]);
-//     //         if(theBlock.id == blockId && permutation.getProperty(bs[2].property).value == blockProperty.value && locations.findIndex( (_) => _.x === theLocations[j].x && _.y === theLocations[j].y && _.z === theLocations[j].z) == -1){
-//     //             switch(bs[0]){
-//     //                 case 1 :
-//     //                     locations.push(theLocations[j]);
-//     //                     meowEvent.dimension.runCommandAsync(`setblock  ${theLocations[j].x} ${theLocations[j].y} ${theLocations[j].z} air -1 replace`);
-//     //                     chainsValue++;
-//     //                     break;
-//     //                 case 2 :
-//     //                     if(meowEvent.dimension.getBlock(theLocations[j]).permutation.getProperty(b[2]).value == b[3] && meowEvent.brokenBlockPermutation.getProperty(b[2]).value == b[3]){d.push(theLocations[j]);meowEvent.dimension.runCommandAsync(`setblock ` + theLocations[j].x + ` ` + theLocations[j].y + ` ` + theLocations[j].z + ` air -1 replace`);g++;};
-//     //                     break;
-//     //             }
-//     //         }
-//     //     }
+        // case "minecraft:stone" :
+        //     bs = [ 1, 2, "stone_type" ];
+        //     c = { block: [ mc.MinecraftItemTypes.stone ], item : [ mc.MinecraftItemTypes.stone, mc.MinecraftItemTypes.cobblestone ], stone : [ 1, 0 ], granite : [ 0, 1 ], granite_smooth : [ 0, 2 ], diorite : [ 0, 3 ], diorite_smooth : [ 0, 4 ], andesite : [ 0, 5 ], andesite_smooth : [ 0, 6 ] };
+        //     break;
 
-//     }
+        // case "minecraft:wheat" :
+        //     bs = [ 2, 3, "growth", 7 ];
+        //     break;
 
-//     /*
-//     while(g > 0 && d.length > 0){
-//         log("喵");
-//         meowEvent.dimension.runCommandAsync(`fill ` + d[0].x + ` ` + d[0].y + ` ` + d[0].z + ` ` + d[d.length-1].x + ` ` + d[d.length-1].y + ` ` + d[d.length-1].z + ` air -1 replace `+ a);
-//         d = d.filter( (_) => meowEvent.dimension.getBlock(_).typeId === a)
-//     }
-//     */
-//     return;
-//     if(g >= h)log("链锁数目已到达上限");
-//     if(g > 0)log("链锁方块:" + a + " 链锁数:" + g);
-//     switch(b[1]){
-//         case 0 :
-//             let items;
-//             while(g > 64){
-//                 items = new mc.ItemStack(c.item[f[0]], 64, f[1]);
-//                 meowEvent.dimension.spawnItem(items, meowEvent.block.location);
-//                 g = g - 64;
-//             }
-//             items = new mc.ItemStack(c.item[f[0]], g, f[1]);
-//             meowEvent.dimension.spawnItem(items, meowEvent.block.location);
-//             break;
-//     }
-//     log("awa")
-//     //上面为连锁采集测试模块
-// }
+        // case "minecraft:leaves" :
+        //     bs = [ 1, 4, "old_leaf_type" ];
+        //     c = { block: [ mc.MinecraftItemTypes.leaves ], oak: [ 0, 0 ], spruce: [ 0, 1 ], birch: [ 0, 2 ], jungle: [ 0, 3 ] };
+        //     break;
+        // case "minecraft:leaves2" :
+        //     bs = [ 1, 4, "new_leaf_type" ];
+        //     c = { block: [ mc.MinecraftItemTypes.leaves2 ], acacia: [ 0, 0 ], dark_oak: [ 0, 1 ]};
+        //     break;
+        default:
+            return;
+    }
+    let locations = [location];
+    const blockProperty = block.getProperty(bs[2].property);
+    const blockValue = blockProperty.validValues.findIndex((_) => { _ = blockProperty.value });
+    let chainsValue = 0;
+    const chainsMax = 100;// 1tick链锁上限 1500
+    const air = mc.MinecraftBlockTypes.air.createDefaultBlockPermutation();
+    for (let i = 0; i < locations.length && chainsValue < chainsMax; i++) {
+        let theLocations = [
+            new mc.BlockLocation(locations[i].x, locations[i].y + 1, locations[i].z),
+            new mc.BlockLocation(locations[i].x + 1, locations[i].y, locations[i].z),
+            new mc.BlockLocation(locations[i].x, locations[i].y, locations[i].z + 1),
+            new mc.BlockLocation(locations[i].x - 1, locations[i].y, locations[i].z),
+            new mc.BlockLocation(locations[i].x, locations[i].y, locations[i].z - 1),
+            new mc.BlockLocation(locations[i].x, locations[i].y - 1, locations[i].z),
+            new mc.BlockLocation(locations[i].x + 1, locations[i].y, locations[i].z + 1),
+            new mc.BlockLocation(locations[i].x - 1, locations[i].y, locations[i].z + 1),
+            new mc.BlockLocation(locations[i].x + 1, locations[i].y, locations[i].z - 1),
+            new mc.BlockLocation(locations[i].x - 1, locations[i].y, locations[i].z - 1),
+            new mc.BlockLocation(locations[i].x + 1, locations[i].y + 1, locations[i].z),
+            new mc.BlockLocation(locations[i].x - 1, locations[i].y + 1, locations[i].z),
+            new mc.BlockLocation(locations[i].x + 1, locations[i].y - 1, locations[i].z),
+            new mc.BlockLocation(locations[i].x - 1, locations[i].y - 1, locations[i].z),
+            new mc.BlockLocation(locations[i].x, locations[i].y + 1, locations[i].z + 1),
+            new mc.BlockLocation(locations[i].x, locations[i].y + 1, locations[i].z - 1),
+            new mc.BlockLocation(locations[i].x, locations[i].y - 1, locations[i].z + 1),
+            new mc.BlockLocation(locations[i].x, locations[i].y - 1, locations[i].z - 1)
+        ]
+        for (let j = 0; j < theLocations.length && chainsValue < chainsMax; j++) {
+            ;
+            const theBlock = dimension.getBlock(theLocations[j]);
+            if (theBlock.typeId == blockId && theBlock.permutation.getProperty(bs[2].property).value == blockProperty.value && locations.findIndex((_) => _.x === theLocations[j].x && _.y === theLocations[j].y && _.z === theLocations[j].z) == -1) {
+                switch (bs[0]) {
+                    case 1:
+                        locations.push(theLocations[j]);
+                        theBlock.setPermutation(air);
+                        chainsValue++;
+                        break;
+                    case 2:
+                        // if(theBlock.permutation.getProperty(b[2]).value == b[3] && meowEvent.brokenBlockPermutation.getProperty(b[2]).value == b[3]){d.push(theLocations[j]);meowEvent.dimension.runCommandAsync(`setblock ` + theLocations[j].x + ` ` + theLocations[j].y + ` ` + theLocations[j].z + ` air -1 replace`);g++;};
+                        break;
+                }
+            }
+        }
+
+    }
+    if (chainsValues < 10 && chainsValue == chainsMax) return mc.System.run(meowChains(player, block, dimension, locations?.pop(), ++chainsValues), 2);
+    return;
+    if (g >= h) log("链锁数目已到达上限");
+    if (g > 0) log("链锁方块:" + a + " 链锁数:" + g);
+    switch (b[1]) {
+        case 0:
+            let items;
+            while (g > 64) {
+                items = new mc.ItemStack(c.item[f[0]], 64, f[1]);
+                meowEvent.dimension.spawnItem(items, meowEvent.block.location);
+                g = g - 64;
+            }
+            items = new mc.ItemStack(c.item[f[0]], g, f[1]);
+            meowEvent.dimension.spawnItem(items, meowEvent.block.location);
+            break;
+    }
+    log("awa")
+    //上面为连锁采集测试模块
+}
 
 function dfksj00(meowEvent, level3) {
     let a;
@@ -447,7 +392,7 @@ function dfksj01(meowEvent, nowTime, queryNoThis, level3, timing1, timing2, timi
     // log(random0);
     let l = (a) => {
         let b = [];
-        [l1[i], l2[i], l3[i], l4[i], l5].forEach((_, i) => { if (_ > 0) b.push(i + 1) })
+        [l1[i], l2[i], l3[i], l4[i], l5].forEach((_, i) => { if (_ > 0) b.push(i + 1) });
         let r = meow.methods.getRndInteger(0, b.length - 1);
         b.forEach((_) => {
             switch (_) {
@@ -562,7 +507,7 @@ function dfksjE01(meowEvent, queryNoThis, events) {/* 事件-随机模块 */
     let arr = [];
     events.forEach((_) => arr.push(_[1]));
     let random0 = meow.methods.getRndInteger(1, arr.sort((a, b) => { return b - a }).shift(0, 0));
-    arr = [[],[]];
+    arr = [[], []];
     events.forEach((_) => arr[0].push(_[1]));
     let random1;
     while (random0 > 0) {
@@ -611,11 +556,11 @@ function dfksjC00(meowEvent, nowTime, queryNoThis, level3) {/* 宝箱 */
     let l1 = /* 1 */[0, 1, 1];
     let l2 = /* 2 */[1, 1, 2];
     let l3 = /* 3 */[1, 2, 2];
-    let l6 = () => { let la = [];[l1[i], l2[i], l3[i]].forEach((_, i) => { if (_ > 0) la.push(i + 1) }); return la }
     let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i]].sort((a, b) => { return b - a }).shift(0, 0));
     let random1
     while (random0 > 0) {
-        let arr = l6();
+        let arr = [];
+        [l1[i], l2[i], l3[i]].forEach((_, i) => { if (_ > 0) arr.push(i + 1) });
         let r = meow.methods.getRndInteger(0, arr.length - 1);
         arr.forEach((_) => {
             switch (_) {
@@ -666,7 +611,7 @@ function dfksjC01(meowEvent, loots, random0Max, random0Min = 1) {/* 宝箱-随�
     }
 }
 function dfksjC10(meowEvent) {
-    dfksjC01(meowEvent, meow.theChests.chests1(), 1);
+    return dfksjC01(meowEvent, meow.theChests.chests1(), 1);
 }
 
 function dfksje00(meowEvent, nowTime, queryNoThis, level3) {/* 生物 */
@@ -691,11 +636,11 @@ function dfksje00(meowEvent, nowTime, queryNoThis, level3) {/* 生物 */
     let l2 = /* 主世界 */[5, 10, 30, 35, 40];
     let l3 = /* 下界 */[0, 0, 2, 3, 5];
     let l4 = /* 末地 */[0, 0, 1, 2, 3];
-    let l6 = () => { let la = [];[l1[i], l2[i], l3[i], l4[i]].forEach((_, i) => { if (_ > 0) la.push(i + 1) }); return la }
     let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i], l4[i]].sort((a, b) => { return b - a }).shift(0, 0));
     let random1;
     let l = (a) => {
-        let b = l6();
+        let b = [];
+        [l1[i], l2[i], l3[i], l4[i]].forEach((_, i) => { if (_ > 0) b.push(i + 1) });
         let r = meow.methods.getRndInteger(0, b.length - 1);
         b.forEach((_) => {
             switch (_) {
@@ -771,13 +716,13 @@ function dfksjB00(meowEvent, nowTime, queryNoThis, level3) {/* 方块 */
     let l3 = /* 主世界 */[5, 10, 30, 35, 40];
     let l4 = /* 下界 */[0, 0, 5, 10, 12];
     let l5 = /* 末地 */[0, 0, 2, 5, 10];
-    let l6 = () => { let la = [];[l1[i], l2[i], l3[i], l4[i], l5[i]].forEach((_, i) => { if (_ > 0) la.push(i + 1) }); return la }
     let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i], l4[i], l5[i]].sort((a, b) => { return b - a }).shift(0, 0));
     let random1;
     // log([l1[i], l2[i], l3[i], l4[i], l5[i]].sort((a, b) => { return b - a }).shift(0, 0));
     // log(random0);
     let l = (a) => {
-        let b = l6();
+        let b = [];
+        [l1[i], l2[i], l3[i], l4[i], l5[i]].forEach((_, i) => { if (_ > 0) b.push(i + 1) });
         let r = meow.methods.getRndInteger(0, b.length - 1);
         b.forEach((_) => {
             switch (_) {
