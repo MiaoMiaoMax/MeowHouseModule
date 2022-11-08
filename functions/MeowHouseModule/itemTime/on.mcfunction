@@ -1,0 +1,1 @@
+scoreboard objectives add itemTime dummy 掉落物寿命

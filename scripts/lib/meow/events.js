@@ -54,8 +54,7 @@ const dfksjE_bedrock = (meowEvent, queryNoThis) => {
 }
 const dfksjE_justiceFromHeaven = (meowEvent, queryNoThis) => {
     queryNoThis.runCommandAsync(`say @${meowEvent.player.name},天降正义`);
-    const explosionOptions = new mc.ExplosionOptions();
-    explosionOptions.breaksBlocks = false;
+    const explosionOptions = {breaksBlocks: false};
     const explodeNoBlocksLoc = meowEvent.player.location;
     meowEvent.dimension.createExplosion(explodeNoBlocksLoc, 5, explosionOptions);
     meowEvent.dimension.spawnEntity("minecraft:lightning_bolt", meowEvent.player.location);
@@ -71,9 +70,10 @@ const dfksjE_bigSurprise = (meowEvent, queryNoThis) => {
 }
 const dfksjE_zombieSiege = (meowEvent, queryNoThis) => {
     queryNoThis.runCommandAsync(`say @${meowEvent.player.name},僵尸围岛`);
-    for (let i = 0; i < 10; i++) {
+    for (let i = 11; --i;) {
         const zombie = meowEvent.dimension.spawnEntity("minecraft:zombie", meowEvent.player.location);
         zombie.addEffect(mc.MinecraftEffectTypes.fireResistance, 12000, 0, false);
+        methods.setScoreForEntity("lifeTime", zombie, 2400);
     }
     return true;
 }

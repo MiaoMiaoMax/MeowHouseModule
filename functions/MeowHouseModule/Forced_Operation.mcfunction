@@ -1,11 +1,27 @@
+effect @e[type=meow:meow_mod,name=§d§f§k§v§5§r§l§3刷新点§r] clear
+
+scoreboard players set @e[type=item,tag=!life] itemTime 1200
+tag @e[type=item,tag=!life,scores={itemTime=0..}] add life
+execute as @e[scores={itemTime=200}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
+execute as @e[scores={itemTime=180}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
+execute as @e[scores={itemTime=160}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
+execute as @e[scores={itemTime=140}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
+execute as @e[scores={itemTime=120}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
+execute as @e[scores={itemTime=100}] at @s run particle minecraft:lava_particle ~ ~1 ~
+execute as @e[scores={itemTime=80}] at @s run particle minecraft:lava_particle ~ ~1 ~
+execute as @e[scores={itemTime=60}] at @s run particle minecraft:lava_particle ~ ~1 ~
+execute as @e[scores={itemTime=40}] at @s run particle minecraft:lava_particle ~ ~1 ~
+execute as @e[scores={itemTime=20}] at @s run particle minecraft:lava_particle ~ ~1 ~
+kill @e[type=item,scores={itemTime=0}]
+
 scoreboard players remove @e[scores={lifeTime=1..}] lifeTime 1
 execute as @e[scores={lifeTime=200}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
 execute as @e[scores={lifeTime=180}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
 execute as @e[scores={lifeTime=160}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
 execute as @e[scores={lifeTime=140}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
 execute as @e[scores={lifeTime=120}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
-execute as @e[scores={lifeTime=100}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
-execute as @e[scores={lifeTime=80}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
+execute as @e[scores={lifeTime=100}] at @s run particle minecraft:lava_particle ~ ~1 ~
+execute as @e[scores={lifeTime=80}] at @s run particle minecraft:lava_particle ~ ~1 ~
 execute as @e[scores={lifeTime=60}] at @s run particle minecraft:lava_particle ~ ~1 ~
 execute as @e[scores={lifeTime=40}] at @s run particle minecraft:lava_particle ~ ~1 ~
 execute as @e[scores={lifeTime=20}] at @s run particle minecraft:lava_particle ~ ~1 ~

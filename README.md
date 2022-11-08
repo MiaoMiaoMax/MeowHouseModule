@@ -6,7 +6,7 @@
 >
 > #### 目前适配游戏版本为：1.19.40
 >
-> 由 [GameTest Framework](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/)(GT框架) 与 [Functions](https://learn.microsoft.com/en-us/minecraft/creator/documents/functionsintroduction)(函数) 构建
+> 由 [Script API](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/)(下的@minecraft/服务器模块，原GT框架) 与 [Functions](https://learn.microsoft.com/en-us/minecraft/creator/documents/functionsintroduction)(函数) 构建
 >
 > 你可以关注作者bilibli平台 [CNQuanYeCha](https://space.bilibili.com/1968985335) 的动态来获得相关消息
 >

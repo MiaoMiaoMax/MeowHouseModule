@@ -11,84 +11,101 @@ import { world } from "@minecraft/server";
 /*+==================分==界==线==================+*/
 
 //log
-const log = (a) => {
-    world.say(`[§3MeowHouseModule§r] ${String(a)}`);                    //GT 1.0.0-beta 新写法
-    // world.getDimension("overworld").runCommandAsync(`say ${String(a)}`);     //GT 0.1.0 旧写法
+const log = (_) => {
+    world.say(`[§3MeowHouseModule§r] ${String(_)}`);                        //GT 1.0.0-beta 新写法
+    // world.getDimension("overworld").runCommandAsync(`say ${String(_)}`); //GT 0.1.0 旧写法
 }
 
 //ScoreForName
-const tyrScoreForName = (a, b, getLog = false) => {
-    if (!world.scoreboard.getObjectives().find((_) => _.id == a)) {
-        if (getLog) log(`tyrScore:错误,目标记分板(${a})不存在`);
+const tyrScoreForName = (objective, name, getLog = false) => {
+    if (!world.scoreboard.getObjectives().find((_) => _.id == objective)) {
+        if (getLog) log(`tyrScore:错误，目标记分板(${objective})不存在`);
         return "ScoreAU";
     }
-    if (!world.scoreboard.getObjective(a).getScores().find((_) => _.participant.displayName == b)) {
-        if (getLog) log(`tyrScore:错误,目标对象(${b})在目标记分板(${a})中未定义分数`);
+    if (!world.scoreboard.getObjective(objective).getScores().find((_) => _.participant.displayName == name)) {
+        if (getLog) log(`tyrScore:错误，目标对象(${name})在目标记分板(${objective})中未定义分数`);
         return "ScoreBU";
     }
     return "true";
 }
-const getScoreForName = (a, b, getLog = false, rectify = false, c = 0) => {
-    if (tyrScoreForName(a, b, getLog) == "ScoreAU") return "ScoreAU";
-    if (tyrScoreForName(a, b, getLog) == "ScoreBU" && !rectify) return "ScoreBU";
-    if (tyrScoreForEntity(a, b, getLog) == "ScoreBU" && rectify) {
-        setScoreForName(a, b, c);
-        if (getLog) log(`自动纠正:已为目标对象(${b})在目标记分板(${a})中定义分数(${c})`);
+const getScoreForName = (objective, name, getLog = false, rectify = false, c = 0) => {
+    if (tyrScoreForName(objective, name, getLog) == "ScoreAU") return "ScoreAU";
+    if (tyrScoreForName(objective, name, getLog) == "ScoreBU" && !rectify) return "ScoreBU";
+    if (tyrScoreForEntity(objective, name, getLog) == "ScoreBU" && rectify) {
+        setScoreForName(objective, name, c);
+        if (getLog) log(`自动纠正:已为目标对象(${name})在目标记分板(${objective})中定义分数(${c})`);
         return c;
     }
-    const score = world.scoreboard.getObjective(a).getScores().find((_) => _.participant.displayName == b).score;
-    if (getLog) log(`getScore:目标对象(${b})在目标记分板(${a})中的分数为(${score})`);
+    const score = world.scoreboard.getObjective(objective).getScores().find((_) => _.participant.displayName == name).score;
+    if (getLog) log(`getScore:目标对象(${name})在目标记分板(${objective})中的分数为(${score})`);
     return score;
 }
-const setScoreForName = (a, b, score = 0, getLog = false) => {
-    if (tyrScoreForName(a, b, getLog) == "ScoreAU") return;
-    world.getDimension("overworld").runCommandAsync(`scoreboard players set ${b} ${a} ${score}`);
-    if (getLog) log(`setScore:将目标对象(${b})在目标记分板(${a})中的分数设为(${score})`);
+const setScoreForName = (objective, name, score = 0, getLog = false) => {
+    if (tyrScoreForName(objective, name, getLog) == "ScoreAU") return;
+    world.getDimension("overworld").runCommandAsync(`scoreboard players set ${name} ${objective} ${score}`);
+    if (getLog) log(`setScore:将目标对象(${name})在目标记分板(${objective})中的分数设为(${score})`);
 }
-const addScoreForName = (a, b, c = 1, getLog = false, isReturn = false) => {
-    if (tyrScoreForName(a, b, getLog) == "ScoreAU") return log(`addScore:错误,目标记分板(${a})不存在`);
-    const score = getScoreForName(a, b, false, true);
-    world.getDimension("overworld").runCommandAsync(`scoreboard players add ${b} ${a} ${c}`);
-    if (getLog) log(`addScore:目标对象(${b})在目标记分板(${a})中的分数现为(${score}+${c}=${score + c})`);
+const addScoreForName = (objective, name, c = 1, getLog = false, isReturn = false) => {
+    if (tyrScoreForName(objective, name, getLog) == "ScoreAU") return log(`addScore:错误,目标记分板(${objective})不存在`);
+    const score = getScoreForName(objective, name, false, true);
+    world.getDimension("overworld").runCommandAsync(`scoreboard players add ${name} ${objective} ${c}`);
+    if (getLog) log(`addScore:目标对象(${name})在目标记分板(${objective})中的分数现为(${score}+${c}=${score + c})`);
     if (isReturn) return score;
 }
 
 //ScoreForEntity
-const tyrScoreForEntity = (a, b, getLog = false) => {
-    if (!world.scoreboard.getObjectives().find((_) => _?.id == a)) {
-        if (getLog) log(`tyrScore:错误,目标记分板(${a})不存在`);
+const tyrScoreForEntity = (objective, entity, getLog = false) => {
+    if (!world.scoreboard.getObjectives().find((_) => _?.id == objective)) {
+        if (getLog) log(`tyrScore:错误，目标记分板(${objective})不存在`);
         return "ScoreAU";
     }
-    if (!world.scoreboard.getObjective(a).getScores().find((_) => _.participant.id == b.scoreboard?.id)) {
-        if (getLog) log(`tyrScore:错误,目标对象(${b.id})在目标记分板(${a})中未定义分数`);
+    if (!world.scoreboard.getObjective(objective).getScores().find((_) => _.participant.id == entity.scoreboard?.id)) {
+        if (getLog) log(`tyrScore:错误，目标对象(${entity.id})在目标记分板(${objective})中未定义分数`);
         return "ScoreBU";
     }
     return "true";
 }
-const getScoreForEntity = (a, b, getLog = false, rectify = false, c = 0) => {
-    if (tyrScoreForEntity(a, b, getLog) == "ScoreAU") return "ScoreAU";
-    if (tyrScoreForEntity(a, b, getLog) == "ScoreBU" && !rectify) return "ScoreBU";
-    if (tyrScoreForEntity(a, b, getLog) == "ScoreBU" && rectify) {
-        setScoreForEntity(a, b, c);
-        if (getLog) log(`自动纠正:已为目标对象(${b.id})在目标记分板(${a})中定义分数(${c})`);
+const getScoreForEntity = (objective, entity, getLog = false, rectify = false, c = 0) => {
+    if (tyrScoreForEntity(objective, entity, getLog) == "ScoreAU") return "ScoreAU";
+    if (tyrScoreForEntity(objective, entity, getLog) == "ScoreBU" && !rectify) return "ScoreBU";
+    if (tyrScoreForEntity(objective, entity, getLog) == "ScoreBU" && rectify) {
+        setScoreForEntity(objective, entity, c);
+        if (getLog) log(`自动纠正:已为目标对象(${entity.id})在目标记分板(${objective})中定义分数(${c})`);
         return c;
     }
-    const score = world.scoreboard.getObjective(a).getScores().find((_) => _.participant.id == b.scoreboard.id).score;
+    const score = world.scoreboard.getObjective(objective).getScores().find((_) => _.participant.id == entity.scoreboard.id).score;
     if (getLog) log(score);
     return score;
 }
-const setScoreForEntity = (a, b, score = 0, getLog = false) => {
-    if (tyrScoreForEntity(a, b, getLog) == "ScoreAU") return;
-    b.runCommandAsync(`scoreboard players set @s ${a} ${score}`);
-    if (getLog) log(`setScore:将目标对象(${b, id})在目标记分板(${a})中的分数设为(${score})`);
+const setScoreForEntity = (objective, entity, score = 0, getLog = false) => {
+    if (tyrScoreForEntity(objective, entity, getLog) == "ScoreAU") return;
+    entity.runCommandAsync(`scoreboard players set @s ${objective} ${score}`);
+    if (getLog) log(`setScore:将目标对象(${entity, id})在目标记分板(${objective})中的分数设为(${score})`);
 }
-const addScoreForEntity = (a, b, c = 1, getLog = false, isReturn = false) => {
-    if (tyrScoreForEntity(a, b, getLog) == "ScoreAU") return log(`addScore:错误,目标记分板(${a})不存在`);
-    const score = getScoreForEntity(a, b, false, true);
-    b.runCommandAsync(`scoreboard players add @s ${a} ${c}`);
-    if (getLog) log(`addScore:目标对象(${b.id})在目标记分板(${a})中的分数现为(${score}+${c}=${score + c})`);
+const addScoreForEntity = (objective, entity, c = 1, getLog = false, isReturn = false) => {
+    if (tyrScoreForEntity(objective, entity, getLog) == "ScoreAU") return log(`addScore:错误,目标记分板(${objective})不存在`);
+    const score = getScoreForEntity(objective, entity, false, true);
+    entity.runCommandAsync(`scoreboard players add @s ${objective} ${c}`);
+    if (getLog) log(`addScore:目标对象(${entity.id})在目标记分板(${objective})中的分数现为(${score}+${c}=${score + c})`);
     if (isReturn) return score;
 }
+
+//MeowOp
+/* const tyrMeowOpObjective = () => {
+    if (world.scoreboard.getObjectives().find((_) => _.id == "MeowOp")) return;
+    log(`MeowOp:错误，存储介质不存在，正在尝试修复`);
+    try { world.getDimension("overworld").runCommandAsync("scoreboard objectives add MeowOp dummy") } catch (e) { return log(`尝试修复失败，请重新初始化，失败原因：${e}`); };
+    return log("修复成功");
+}
+const getMeowOpForPlayerEntity = (PlayerEntity, getLog) => {
+    tyrMeowOpObjective();
+}
+const addMeowOpForPlayerEntity = (PlayerEntity, getLog) => {
+    tyrMeowOpObjective();
+}
+const removeMeowOpForPlayerEntity = (PlayerEntity, getLog) => {
+    tyrMeowOpObjective();
+} */
 
 //getTime
 const getNowTime = () => {

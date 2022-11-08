@@ -21,6 +21,7 @@ scoreboard objectives add cache1 dummy 等级计算数据2
 scoreboard objectives add cache2 dummy
 
 scoreboard objectives add lifeTime dummy 生物寿命
+scoreboard objectives add meowTps dummy tps
 scoreboard objectives add dotiledrops dummy
 
 scoreboard players set @e[type=meow:meow_mod,tag=Client] timing0 0
@@ -32,7 +33,7 @@ scoreboard players set @e[type=meow:meow_mod,tag=Client] timing5 0
 
 gamerule commandblockoutput false
 
-tellraw @a {"rawtext":[{"text":"§l§3DFKSJv6Functions核心储存模块已搭建完毕\n并已把commandblockoutput参数改为false\n\n这是来自CNQuanYeCha的单方块核心functionV6的提示\n\n§c未经允许禁止外传"}]}
+tellraw @a {"rawtext":[{"text":"§l§3核心储存模块已搭建完毕\n并已把commandblockoutput参数改为false\n\n这是来自CNQuanYeCha的MeowHouseModule(喵喵屋模块)v1的提示"}]}
 playsound random.anvil_use @a ~ ~ ~
 
 # 本作品采用知识共享署名-非商业性-相同方式共享 4.0 国际许可协议进行许可。 要查看此许可证的副本，请访问
