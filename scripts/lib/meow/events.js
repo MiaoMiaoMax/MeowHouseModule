@@ -54,7 +54,7 @@ const dfksjE_bedrock = (meowEvent, queryNoThis) => {
 }
 const dfksjE_justiceFromHeaven = (meowEvent, queryNoThis) => {
     queryNoThis.runCommandAsync(`say @${meowEvent.player.name},天降正义`);
-    const explosionOptions = {breaksBlocks: false};
+    const explosionOptions = { breaksBlocks: false };
     const explodeNoBlocksLoc = meowEvent.player.location;
     meowEvent.dimension.createExplosion(explodeNoBlocksLoc, 5, explosionOptions);
     meowEvent.dimension.spawnEntity("minecraft:lightning_bolt", meowEvent.player.location);

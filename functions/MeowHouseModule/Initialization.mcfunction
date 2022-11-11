@@ -2,25 +2,29 @@ scoreboard objectives add timing0 dummy
 scoreboard objectives add timing1 dummy 事件cd
 scoreboard objectives add timing2 dummy 箱子cd
 scoreboard objectives add timing3 dummy 生物cd
-scoreboard objectives add timing4 dummy
-scoreboard objectives add timing5 dummy
+# scoreboard objectives add timing4 dummy
+# scoreboard objectives add timing5 dummy
 scoreboard objectives add timingB dummy bedrock_cd
 
 scoreboard objectives add level0 dummy 玩家破坏方块数
-scoreboard objectives add level1 dummy 玩家单方块敲掉数
-scoreboard objectives add level2 dummy 刷新点刷新方块数
+scoreboard objectives add level1 dummy 玩家单方块积分
+scoreboard objectives add level2 dummy 刷新点刷新数
 scoreboard objectives add level3 dummy 玩家单方块等级
 
 scoreboard objectives add threshold0 dummy 事件阈值
 scoreboard objectives add threshold1 dummy 宝箱阈值
 scoreboard objectives add threshold2 dummy 贵重方块阈值
 scoreboard objectives add threshold3 dummy 生物阈值
+scoreboard objectives add threshold4 dummy 积分阈值
+scoreboard objectives add threshold5 dummy 经验阈值
 
 scoreboard objectives add cache0 dummy 等级计算数据1
 scoreboard objectives add cache1 dummy 等级计算数据2
-scoreboard objectives add cache2 dummy
+scoreboard objectives add cache2 dummy 等级计算数据3
+scoreboard objectives add cache3 dummy 等级计算数据4
 
 scoreboard objectives add lifeTime dummy 生物寿命
+# scoreboard objectives add itemTime dummy 掉落物寿命
 scoreboard objectives add meowTps dummy tps
 scoreboard objectives add dotiledrops dummy
 

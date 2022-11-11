@@ -8,6 +8,7 @@
 
 import * as mc from "@minecraft/server";
 import * as meow from "./lib/index.js";
+import { chests1 } from "./lib/meow/chests.js";
 
 /*+==================分==界==线==================+*/
 
@@ -39,7 +40,7 @@ world.events.tick.subscribe(meowEvent => {
 })
 world.events.beforeChat.subscribe(meowEvent => {
     pos(meowEvent);
-    command(meowEvent);
+    chatCommand(meowEvent);
     return meowEvent;
 })
 world.events.blockBreak.subscribe(meowEvent => {
@@ -82,7 +83,7 @@ function ticks(meowEvent) {
     // log("awa");
     tps++;
     let now = meow.methods.getCurrentTime();
-    if ( lastTime != now ) {
+    if (lastTime != now) {
         lastTime = now;
         meow.methods.setScoreForName("meowTps", "tps", tps);
         tps = 0;
@@ -98,13 +99,13 @@ function pos(meowEvent) {
     let msg = " x:" + x + ", y:" + y + ", z:" + z + " ";
     meowEvent.message = String(meowEvent.message).replace(/<pos>/g, `${msg}`);
 }
-function command(meowEvent) {
+function chatCommand(meowEvent) {
     const message = String(meowEvent.message);
     if (message.startsWith("..")) {
         const player = meowEvent.sender;
         if (message.match(/^\.+$/)) return;
         let cmd = message.slice(2).split(" ").filter((str) => { return str != "" });
-        log(cmd.length+" "+cmd.toString());
+        log(cmd.length + " " + cmd.toString());
         const noCmd = () => player.runCommandAsync(`tellraw @s {"rawtext":[{"text":"§c未知的命令:${cmd[0]}。请检查命令是否存在，以及您对它是否拥有使用权限。\n输入 ..help 以查看所有命令"}]}`);
         meowEvent.cancel = true;
         switch (cmd[0]) {
@@ -152,7 +153,7 @@ function blockBreak(meowEvent) {
     if (meowEvent.dimension.getBlock(new mc.BlockLocation(meowEvent.block.x, meowEvent.block.y - 1, meowEvent.block.z)).typeId == "meow:chaos_recloser") {
         const entityIntensify = {
             type: "meow:meow_mod",
-            name: "§d§f§k§v§5§r§l§3刷新点§r",
+            name: "§d§f§k§m§h§m§r§l§3刷新点§r",
             location: new mc.Location(meowEvent.block.x + 0.5, meowEvent.block.y + 1.5, meowEvent.block.z + 0.5),
             closest: 1,
             maxDistance: 0.3
@@ -168,6 +169,7 @@ function blockBreak(meowEvent) {
         for (const queryNoThis of query) {
             log("id: " + meowEvent.brokenBlockPermutation.type.id);
             log("tag: " + queryNoThis.getTags().toString() ?? null);
+            log("id_a: " + player.id + " id_b: " + queryNoThis.id);
             const nowTime = [meow.methods.getCurrentDate(), meow.methods.getCurrentTime()];
             const playerIntensify = {
                 type: "minecraft:player",
@@ -179,6 +181,7 @@ function blockBreak(meowEvent) {
             }
             const playerQuery = meowEvent.dimension.getEntities(playerIntensify);
             const playerGMC = Array.from(playerQuery).length;
+            const playerIdLN = Number(String(player.id).slice(-1));
             log("playerGMC: " + playerGMC);
             if (queryNoThis.hasTag("bedrock")) {
                 if (meowEvent.brokenBlockPermutation.type.id == "minecraft:bedrock") {
@@ -204,8 +207,11 @@ function blockBreak(meowEvent) {
             // if(queryNoThis.hasTag("air"))return;
             // queryNoThis.addTag("air");
             meow.methods.addScoreForEntity("level1", player);
+            meow.methods.addScoreForEntity("level2", queryNoThis);
             let cache0 = meow.methods.getScoreForEntity("cache0", player, false, true);
             let cache1 = meow.methods.getScoreForEntity("cache1", player, false, true, 1);
+            let cache2 = meow.methods.getScoreForEntity("cache2", player, false, true, playerIdLN);
+            let cache3 = meow.methods.getScoreForEntity("cache3", player, false, true, -playerIdLN);
             let level3 = meow.methods.getScoreForEntity("level3", player, false, true);
             let timing0 = meow.methods.getScoreForEntity("timing0", queryNoThis, false, true);
             let timing1 = meow.methods.getScoreForEntity("timing1", queryNoThis, false, true);
@@ -214,6 +220,8 @@ function blockBreak(meowEvent) {
             switch ("ScoreAU") {
                 case cache0:
                 case cache1:
+                case cache2:
+                case cache3:
                 case level3:
                 case timing0:
                 case timing1:
@@ -222,20 +230,83 @@ function blockBreak(meowEvent) {
                     // queryNoThis.removeTag("air");
                     return meow.methods.log("严重错误:检测到核心不完整,请重新初始化核心");
             }
-            cache0++;
-            meow.methods.addScoreForEntity("cache0", player);
-            if (cache0 >= cache1 && level3 < 100) {
-                level3++;
-                cache1 = Math.floor(cache1 + Math.sqrt(level3 * 2) + level3 * 9 + cache1 / (level3 * 2));
-                meow.methods.setScoreForEntity("cache0", player);
-                meow.methods.setScoreForEntity("cache1", player, cache1);
-                meow.methods.addScoreForEntity("level3", player);
-                // if(level3==1)player.runCommandAsync(`function MeowHouseModule/Achievement/first_block`);
+            const level3Max = 200; //等级上限，最高500
+            // if (level3 * 2 + 7505 != cache3 + cache1) {
+            //     if (cache3 == 7504) {
+            //         cache1 = 1;
+            //         meow.methods.setScoreForEntity("cache1", player, 1);
+            //     } else {
+            //         if (level3 + 31 != cache2) {
+            //             queryNoThis.runCommandAsync(`say 检测到@${player.name}的等级可能存在问题,正在尝试修复`);
+            //             player.runCommandAsync(`titleraw @s title {"rawtext":[{"text":"§6检测到等级可能存在问题"}]}`);
+            //         }
+            //         cache1 = cache3 + level3 * 2 + 76;
+            //         meow.methods.setScoreForEntity("cache1", player, cache1);
+            //     }
+            // }
+            if (playerIdLN - level3 != cache2) {
+                queryNoThis.runCommandAsync(`say 检测到@${player.name}的等级可能存在问题,正在尝试修复`);
+                player.runCommandAsync(`titleraw @s title {"rawtext":[{"text":"§6检测到等级可能存在问题"}]}`);
+                // log(`level3: ${level3} cache2: ${cache2 - 31}`);
+                if (cache1 == 1) {
+                    level3 = 0;
+                    cache2 = playerIdLN;
+                    meow.methods.setScoreForEntity("level3", player);
+                    meow.methods.setScoreForEntity("cache2", player, cache2);
+                    player.runCommandAsync(`titleraw @s title {"rawtext":[{"text":"§6已修复"}]}`);
+                    player.runCommandAsync(`titleraw @s subtitle {"rawtext":[{"text":"§6可能存在问题的等级"}]}`);
+                    queryNoThis.runCommandAsync(`say 已修复`);
+                } else {
+                    let i = [level3, (-cache2 - playerIdLN)].sort((a, b) => { return b - a })[0];
+                    let a = 1;
+                    for (let j = 1; i--; j++) {
+                        a = Math.floor(a + Math.sqrt(j * 2) + j * 9 + a / (j * 2));
+                        if (a == cache1) {
+                            level3 = j;
+                            cache2 = playerIdLN - j;
+                            meow.methods.setScoreForEntity("level3", player, level3);
+                            meow.methods.setScoreForEntity("cache2", player, cache2);
+                            player.runCommandAsync(`titleraw @s title {"rawtext":[{"text":"§6已修复"}]}`);
+                            player.runCommandAsync(`titleraw @s subtitle {"rawtext":[{"text":"§6可能存在问题的等级"}]}`);
+                            queryNoThis.runCommandAsync(`say 已修复`);
+                            break;
+                        } else if (j == level3Max && a < cache1) {
+                            level3 = j;
+                            cache1 = a;
+                            cache2 = playerIdLN - j;
+                            cache3 = cache1 - playerIdLN * j;
+                            meow.methods.setScoreForEntity("level3", player, level3);
+                            meow.methods.setScoreForEntity("cache1", player, cache1);
+                            meow.methods.setScoreForEntity("cache2", player, cache2);
+                            meow.methods.setScoreForEntity("cache3", player, cache3);
+                            player.runCommandAsync(`titleraw @s title {"rawtext":[{"text":"§6已修复"}]}`);
+                            player.runCommandAsync(`titleraw @s subtitle {"rawtext":[{"text":"§6可能存在问题的等级"}]}`);
+                            queryNoThis.runCommandAsync(`say 已修复`);
+                            break;
+                        }
+                    }
+                }
             }
-            if (level3 < 100) player.runCommandAsync(`titleraw @s actionbar {"rawtext":[{"text":"§2xp:§a${cache0}/§b${cache1}, §6level:§e${level3}"}]}`);
-            else player.runCommandAsync(`titleraw @s actionbar {"rawtext":[{"text":"§2xp:§a已满级, §6level:§e${level3}"}]}`);
+            cache0++;
+            // cache0 += 100000;   //awa
+            meow.methods.setScoreForEntity("cache0", player, cache0);
+            if (level3 < level3Max) {
+                if (cache0 >= cache1) {
+                    level3++;
+                    cache1 = Math.floor(cache1 + Math.sqrt(level3 * 2) + level3 * 9 + cache1 / (level3 * 2));
+                    cache3 = cache1 - playerIdLN * level3;
+                    meow.methods.setScoreForEntity("cache0", player);
+                    meow.methods.setScoreForEntity("cache1", player, cache1);
+                    meow.methods.setScoreForEntity("cache2", player, --cache2);
+                    meow.methods.setScoreForEntity("cache3", player, cache3);
+                    meow.methods.setScoreForEntity("level3", player, level3);
+                    // if(level3==1)player.runCommandAsync(`function MeowHouseModule/Achievement/first_block`);
+                }
+                player.runCommandAsync(`titleraw @s actionbar {"rawtext":[{"text":"§2xp:§a${cache0}/§b${cache1}, §6level:§e${level3}"}]}`);
+            }
+            else player.runCommandAsync(`titleraw @s actionbar {"rawtext":[{"text":"§2xp:§a${cache0}/§b已满级, §6level:§e${level3}"}]}`);
             if ((nowTime[1] - timing0) >= 1) { timing0 = 0; meow.methods.setScoreForEntity("timing0", queryNoThis, nowTime[1]); };
-            if (timing0 == 0) return dfksj01(meowEvent, nowTime, queryNoThis, level3, timing1, timing2, timing3);
+            if (timing0 == 0) return dfksj01(meowEvent, nowTime, queryNoThis, cache0, level3, timing1, timing2, timing3);
             // if (timing0 != 0) return dfksj00(meowEvent, nowTime, queryNoThis, level3);
             else return dfksj00(meowEvent, nowTime, queryNoThis, level3);
             // queryNoThis.removeTag("air");
@@ -372,7 +443,7 @@ function dfksj00(meowEvent, level3) {
     meowEvent.block.setPermutation(c);
 }
 
-function dfksj01(meowEvent, nowTime, queryNoThis, level3, timing1, timing2, timing3) {
+function dfksj01(meowEvent, nowTime, queryNoThis, cache0, level3, timing1, timing2, timing3) {
     let i;
     if (level3 < 5) i = 0;
     else if (level3 < 7) i = 1;
@@ -387,7 +458,7 @@ function dfksj01(meowEvent, nowTime, queryNoThis, level3, timing1, timing2, timi
     let l3 = /* 生物 */[0, 0, 20, 25, 25, 35, 40, 50];
     let l4 = /* 方块 */[100, 150, 190, 210, 220, 225, 230, 230];
     let l5 = /* 凑数 */500 - l1[i] - l2[i] - l3[i] - l4[i];
-    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i], l4[i], l5].sort((a, b) => { return b - a }).shift(0, 0));
+    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i], l4[i], l5].sort((a, b) => { return b - a })[0]);
     let random1;
     // log(random0);
     let l = (_) => {
@@ -410,19 +481,19 @@ function dfksj01(meowEvent, nowTime, queryNoThis, level3, timing1, timing2, timi
     while (random0 >= 10) random1 = l(10);
     while (random0 >= 5) random1 = l(5);
     while (random0 > 0) random1 = l(1);
-    random1 = 1;    //awa
+    random1 = 5;    //awa
     log(random1);
     switch (random1) {
         case 1:
             if ((nowTime[1] - timing1) >= 1200) { timing1 = 0; meow.methods.setScoreForEntity("timing1", queryNoThis); };
-            if (timing1 == 0) return dfksjE00(meowEvent, nowTime, queryNoThis, level3); else return dfksj00(meowEvent, level3);
+            if (timing1 == 0) return dfksjE00(meowEvent, nowTime, queryNoThis, cache0, level3); else return dfksj00(meowEvent, level3);
         case 2:
             if ((nowTime[1] - timing2) >= 600) { timing2 = 0; meow.methods.setScoreForEntity("timing2", queryNoThis); };
-            if (timing2 == 0) return dfksjC00(meowEvent, nowTime, queryNoThis, level3); else return dfksj00(meowEvent, level3);
+            if (timing2 == 0) return dfksjC00(meowEvent, nowTime, queryNoThis, cache0, level3); else return dfksj00(meowEvent, level3);
         case 3:
             if ((nowTime[1] - timing3) >= 600) { timing3 = 0; meow.methods.setScoreForEntity("timing3", queryNoThis); };
-            if (timing3 == 0) return dfksje00(meowEvent, nowTime, queryNoThis, level3); else return dfksj00(meowEvent, level3);
-        case 4: return dfksjB00(meowEvent, nowTime, queryNoThis, level3);
+            if (timing3 == 0) return dfksje00(meowEvent, nowTime, queryNoThis, cache0, level3); else return dfksj00(meowEvent, level3);
+        case 4: return dfksjB00(meowEvent, nowTime, queryNoThis, cache0, level3);
         case 5: return dfksj00(meowEvent, level3);
         default:
             meow.methods.log("主随机模块遇到未知错误，当前为临时随机模块代理");
@@ -456,9 +527,9 @@ function dfksj01(meowEvent, nowTime, queryNoThis, level3, timing1, timing2, timi
     // if(random0 >= l1[i][0] && random0 <= l1[i][1] && timing3 != 0){dfksj00(meowEvent, level3);log("miao");}
 }
 
-function dfksjE00(meowEvent, nowTime, queryNoThis, level3) {/* 事件 */
+function dfksjE00(meowEvent, nowTime, queryNoThis, cache0, level3) {/* 事件 */
     // meow.methods.setScoreForEntity("timing1", queryNoThis, nowTime[1]);
-    meow.methods.addScoreForEntity("cache0", meowEvent.player);
+    meow.methods.setScoreForEntity("cache0", meowEvent.player, ++cache0);
     let threshold0 = meow.methods.getScoreForEntity("threshold0", queryNoThis, false, true);
     if (threshold0 === "ScoreAU") {
         meow.methods.log("严重错误:检测到核心不完整，正在尝试修复");
@@ -467,7 +538,7 @@ function dfksjE00(meowEvent, nowTime, queryNoThis, level3) {/* 事件 */
         if (threshold0 != "ScoreAU") meow.methods.log("修复成功");
     }
     if (threshold0 == 0 || nowTime[0] != threshold0.toString().slice(0, 6)) { threshold0 = (nowTime[0] + "00"); meow.methods.setScoreForEntity("threshold0", queryNoThis, threshold0); };
-    // if (Number(threshold0.toString().slice(6, 8)) < 10) meow.methods.addScoreForEntity("threshold0", queryNoThis);
+    // if (Number(threshold0.toString().slice(6, 8)) < 10) meow.methods.setScoreForEntity("threshold0", queryNoThis, ++threshold0);
     // else { dfksj00(meowEvent, level3); return; };
     let i;
     if (level3 < 16) i = 0;
@@ -476,7 +547,7 @@ function dfksjE00(meowEvent, nowTime, queryNoThis, level3) {/* 事件 */
     let l1 = /* 1 */[0, 1, 1];
     let l2 = /* 2 */[1, 1, 2];
     let l3 = /* 3 */[1, 2, 2];
-    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i]].sort((a, b) => { return b - a }).shift(0, 0));
+    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i]].sort((a, b) => { return b - a })[0]);
     let random1
     while (random0 > 0) {
         let arr = [];
@@ -492,12 +563,16 @@ function dfksjE00(meowEvent, nowTime, queryNoThis, level3) {/* 事件 */
         random0--;
         random1 = arr[r];
     }
-    random1 = 2;    //awa
+    //random1 = 2;    //awa
     log(random1);
     let block;
     switch (random1) {
-        case 1: { block = dfksjE10(meowEvent, queryNoThis); break; };
-        case 2: { block = dfksjE20(meowEvent, queryNoThis); break; };
+        case 1:
+            block = dfksjE10(meowEvent, queryNoThis);
+            break;
+        case 2:
+            block = dfksjE20(meowEvent, queryNoThis);
+            break;
         // case 3: { block = dfksjE30(meowEvent, queryNoThis); break; };
         case 3: { block = true; break; };
         default:
@@ -509,7 +584,7 @@ function dfksjE00(meowEvent, nowTime, queryNoThis, level3) {/* 事件 */
 function dfksjE01(meowEvent, queryNoThis, events) {/* 事件-随机模块 */
     let arr = [];
     events.forEach((_) => arr.push(_[1]));
-    let random0 = meow.methods.getRndInteger(1, arr.sort((a, b) => { return b - a }).shift(0, 0));
+    let random0 = meow.methods.getRndInteger(1, arr.sort((a, b) => { return b - a })[0]);
     arr = [[], []];
     events.forEach((_) => arr[0].push(_[1]));
     let random1;
@@ -521,23 +596,23 @@ function dfksjE01(meowEvent, queryNoThis, events) {/* 事件-随机模块 */
         random0--;
         random1 = arr[1][r];
     }
-    random1 = 1;    // awa
+    //random1 = 1;    // awa
     log(random1);
     return meow.theEvents.events(events[random1][0](meowEvent, queryNoThis));
 }
 function dfksjE10(meowEvent, queryNoThis) {
-    meow.methods.addScoreForEntity("cache0", meowEvent.player);
+    // meow.methods.addScoreForEntity("cache0", meowEvent.player);
     return dfksjE01(meowEvent, queryNoThis, meow.theEvents.events1());
 }
 
 function dfksjE20(meowEvent, queryNoThis) {
-    meow.methods.addScoreForEntity("cache0", meowEvent.player);
+    // meow.methods.addScoreForEntity("cache0", meowEvent.player);
     return dfksjE01(meowEvent, queryNoThis, meow.theEvents.events2());
 }
 
-function dfksjC00(meowEvent, nowTime, queryNoThis, level3) {/* 宝箱 */
+function dfksjC00(meowEvent, nowTime, queryNoThis, cache0, level3) {/* 宝箱 */
     // meow.methods.setScoreForEntity("timing2", queryNoThis, nowTime[1]);
-    meow.methods.addScoreForEntity("cache0", meowEvent.player);
+    meow.methods.setScoreForEntity("cache0", meowEvent.player, ++cache0);
     queryNoThis.addTag("barrel");
     let threshold1 = meow.methods.getScoreForEntity("threshold1", queryNoThis, false, true);
     if (threshold1 === "ScoreAU") {
@@ -547,7 +622,7 @@ function dfksjC00(meowEvent, nowTime, queryNoThis, level3) {/* 宝箱 */
         if (threshold1 != "ScoreAU") meow.methods.log("修复成功");
     }
     if (threshold1 == 0 || nowTime[0] != threshold1.toString().slice(0, 6)) { threshold1 = (nowTime[0] + "00"); meow.methods.setScoreForEntity("threshold1", queryNoThis, threshold1); };
-    // if (Number(threshold1.toString().slice(6, 8)) < 10) meow.methods.addScoreForEntity("threshold1", queryNoThis);
+    // if (Number(threshold1.toString().slice(6, 8)) < 10) meow.methods.setScoreForEntity("threshold1", queryNoThis, ++threshold1);
     // else { dfksj00(meowEvent, level3); return; };
     const barrel = mc.MinecraftBlockTypes.barrel.createDefaultBlockPermutation();
     barrel.getProperty("facing_direction").value = 1;
@@ -559,7 +634,7 @@ function dfksjC00(meowEvent, nowTime, queryNoThis, level3) {/* 宝箱 */
     let l1 = /* 1 */[0, 1, 1];
     let l2 = /* 2 */[1, 1, 2];
     let l3 = /* 3 */[1, 2, 2];
-    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i]].sort((a, b) => { return b - a }).shift(0, 0));
+    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i]].sort((a, b) => { return b - a })[0]);
     let random1
     while (random0 > 0) {
         let arr = [];
@@ -620,7 +695,7 @@ function dfksjC10(meowEvent) {
     return dfksjC01(meowEvent, meow.theChests.chests1(), 1);
 }
 
-function dfksje00(meowEvent, nowTime, queryNoThis, level3) {/* 生物 */
+function dfksje00(meowEvent, nowTime, queryNoThis, cache0, level3) {/* 生物 */
     // meow.methods.setScoreForEntity("timing3", queryNoThis, nowTime[1]);
     let threshold3 = meow.methods.getScoreForEntity("threshold3", queryNoThis, false, true);
     if (threshold3 === "ScoreAU") {
@@ -630,7 +705,7 @@ function dfksje00(meowEvent, nowTime, queryNoThis, level3) {/* 生物 */
         if (threshold3 != "ScoreAU") meow.methods.log("修复成功");
     }
     if (threshold3 == 0 || nowTime[0] != threshold3.toString().slice(0, 6)) { threshold3 = (nowTime[0] + "00"); meow.methods.setScoreForEntity("threshold3", queryNoThis, threshold3); };
-    // if (Number(threshold3.toString().slice(6, 8)) < 15) meow.methods.addScoreForEntity("threshold3", queryNoThis);
+    // if (Number(threshold3.toString().slice(6, 8)) < 15) meow.methods.setScoreForEntity("threshold3", queryNoThis, ++threshold3);
     // else { dfksj00(meowEvent, level3); return; };
     let i;
     if (level3 < 12) i = 0;
@@ -642,7 +717,7 @@ function dfksje00(meowEvent, nowTime, queryNoThis, level3) {/* 生物 */
     let l2 = /* 主世界 */[5, 10, 30, 35, 40];
     let l3 = /* 下界 */[0, 0, 2, 3, 5];
     let l4 = /* 末地 */[0, 0, 1, 2, 3];
-    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i], l4[i]].sort((a, b) => { return b - a }).shift(0, 0));
+    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i], l4[i]].sort((a, b) => { return b - a })[0]);
     let random1;
     let l = (_) => {
         let arr = [];
@@ -667,7 +742,9 @@ function dfksje00(meowEvent, nowTime, queryNoThis, level3) {/* 生物 */
 
     dfksj00(meowEvent, level3);
     switch (random1) {
-        case 1: return dfksje10(meowEvent);
+        case 1:
+            meow.methods.setScoreForEntity("cache0", meowEvent.player, ++cache0);
+            return dfksje10(meowEvent);
         case 2: return dfksje20(meowEvent);
         case 3: return dfksje30(meowEvent);
         case 4: return dfksje40(meowEvent);
@@ -700,7 +777,6 @@ function dfksje01(meowEvent, entitys, random0Max, random0Min, lifeTime) {/* 生�
     return meow.methods.setScoreForEntity("lifeTime", spwn, lifeTime);
 }
 function dfksje10(meowEvent) {/* 稀有生物 */
-    meow.methods.addScoreForEntity("cache0", meowEvent.player);
     return dfksje01(meowEvent, meow.theEntitys.entitys1(), 1, 1, 6000);
 }
 function dfksje20(meowEvent) {/* 主世界 */
@@ -713,7 +789,7 @@ function dfksje40(meowEvent) {/* 末地 */
     return dfksje01(meowEvent, meow.theEntitys.entitys4(), 5, 1, 900);
 }
 
-function dfksjB00(meowEvent, nowTime, queryNoThis, level3) {/* 方块 */
+function dfksjB00(meowEvent, nowTime, queryNoThis, cache0, level3) {/* 方块 */
     let i;
     if (level3 < 5) i = 0;
     else if (level3 < 7) i = 1;
@@ -725,9 +801,9 @@ function dfksjB00(meowEvent, nowTime, queryNoThis, level3) {/* 方块 */
     let l3 = /* 主世界 */[5, 10, 30, 35, 40];
     let l4 = /* 下界 */[0, 0, 5, 10, 12];
     let l5 = /* 末地 */[0, 0, 2, 5, 10];
-    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i], l4[i], l5[i]].sort((a, b) => { return b - a }).shift(0, 0));
+    let random0 = meow.methods.getRndInteger(1, [l1[i], l2[i], l3[i], l4[i], l5[i]].sort((a, b) => { return b - a })[0]);
     let random1;
-    // log([l1[i], l2[i], l3[i], l4[i], l5[i]].sort((a, b) => { return b - a }).shift(0, 0));
+    // log([l1[i], l2[i], l3[i], l4[i], l5[i]].sort((a, b) => { return b - a })[0]);
     // log(random0);
     let l = (a) => {
         let b = [];
@@ -762,8 +838,11 @@ function dfksjB00(meowEvent, nowTime, queryNoThis, level3) {/* 方块 */
     switch (random1) {
         case 1:
             if (threshold2 == 0 || nowTime[0] != threshold2.toString().slice(0, 6)) { threshold2 = (nowTime[0] + "00"); meow.methods.setScoreForEntity("threshold2", queryNoThis, threshold2); };
-            if (Number(threshold2.toString().slice(6, 8)) < 15) return dfksjB10(meowEvent, queryNoThis); /* log(`好，${threshold2}`); */
-            else return dfksj00(meowEvent, level3);
+            if (Number(threshold2.toString().slice(6, 8)) < 15) {
+                meow.methods.setScoreForEntity("threshold2", queryNoThis, ++threshold2);
+                meow.methods.setScoreForEntity("cache0", meowEvent.player, ++cache0);
+                return dfksjB10(meowEvent);
+            } else return dfksj00(meowEvent, level3);
         case 2: return dfksjB20(meowEvent);
         case 3: return dfksjB30(meowEvent);
         case 4: return dfksjB40(meowEvent);
@@ -791,9 +870,7 @@ function dfksjB01(meowEvent, blocks, random0Max, random0Min = 1) {/* 方块-随�
     const b = mc.MinecraftBlockTypes.get(blocks[block[random1]][0]).createDefaultBlockPermutation();
     meowEvent.block.setPermutation(b);
 }
-function dfksjB10(meowEvent, queryNoThis) {/* 贵重方块 */
-    meow.methods.addScoreForEntity("threshold2", queryNoThis);
-    meow.methods.addScoreForEntity("cache0", meowEvent.player);
+function dfksjB10(meowEvent) {/* 贵重方块 */
     return dfksjB01(meowEvent, meow.theBlocks.blocks1(), 3);
 }
 function dfksjB20(meowEvent) {/* 矿物 */
@@ -848,7 +925,7 @@ function piston(meowEvent) {
 function explosion(meowEvent) {
     if (!meowEvent.source) return;// 过滤没有实体的爆炸
     if (meowEvent.source.hasTag("explosion")) return;// 过滤已有标签实体的爆炸，因为给代替的爆炸设置了source
-    if (String(meowEvent.source.id).startsWith("meow:")) return;// 过滤喵喵屋自己的东西
+    if (String(meowEvent.source.typeId).startsWith("meow:")) return;// 过滤喵喵屋自己的东西
     meowEvent.source.addTag("explosion");
     meowEvent.cancel = true;
     const explosionOptions = {
@@ -861,7 +938,7 @@ function explosion(meowEvent) {
     explosionOptions.source = meowEvent.source; */
     const explodeNoBlocksLoc = meowEvent.source.location;
     let radius;
-    switch (meowEvent.source.id) {
+    switch (meowEvent.source.typeId) {
         case "minecraft:creeper":
             radius = 3;
             if (meowEvent.source.getComponent("minecraft:is_charged")) radius = 6;
