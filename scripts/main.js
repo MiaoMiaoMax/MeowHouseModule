@@ -85,7 +85,14 @@ function ticks(meowEvent) {
     let now = meow.methods.getCurrentTime();
     if (lastTime != now) {
         lastTime = now;
-        meow.methods.setScoreForName("meowTps", "tps", tps);
+        // let nowTime = meow.methods.getNowTime();
+        meow.methods.setScoreForName("meowTick", "tps", tps);
+        // meow.methods.setScoreForName("meowTick", "年", nowTime[0]);
+        // meow.methods.setScoreForName("meowTick", "月", nowTime[1]);
+        // meow.methods.setScoreForName("meowTick", "日", nowTime[2]);
+        // meow.methods.setScoreForName("meowTick", "时", nowTime[3]);
+        // meow.methods.setScoreForName("meowTick", "分", nowTime[4]);
+        // meow.methods.setScoreForName("meowTick", "秒", nowTime[5]);
         tps = 0;
     }
 }
@@ -124,13 +131,11 @@ function chatCommand(meowEvent) {
             case "log":
                 switch (cmd[1]) {
                     case "1":
-                    case "true":
                         logs = true;
-                        return meow.methods.log("运行日志已开启");
+                        return meow.methods.log("运行日志已设置为开启");
                     case "0":
-                    case "false":
                         logs = false;
-                        return meow.methods.log("运行日志已关闭");
+                        return meow.methods.log("运行日志已设置为关闭");
                     default:
                         if (logs) return meow.methods.log("运行日志：已开启");
                         else return meow.methods.log("运行日志：未开启");
@@ -213,6 +218,8 @@ function blockBreak(meowEvent) {
             let cache2 = meow.methods.getScoreForEntity("cache2", player, false, true, playerIdLN);
             let cache3 = meow.methods.getScoreForEntity("cache3", player, false, true, -playerIdLN);
             let level3 = meow.methods.getScoreForEntity("level3", player, false, true);
+            let threshold4 = meow.methods.getScoreForEntity("threshold4", player, false, true);
+            let threshold5 = meow.methods.getScoreForEntity("threshold5", player, false, true);
             let timing0 = meow.methods.getScoreForEntity("timing0", queryNoThis, false, true);
             let timing1 = meow.methods.getScoreForEntity("timing1", queryNoThis, false, true);
             let timing2 = meow.methods.getScoreForEntity("timing2", queryNoThis, false, true);
@@ -227,10 +234,12 @@ function blockBreak(meowEvent) {
                 case timing1:
                 case timing2:
                 case timing3:
+                case threshold4:
+                case threshold5:
                     // queryNoThis.removeTag("air");
                     return meow.methods.log("严重错误:检测到核心不完整,请重新初始化核心");
             }
-            const level3Max = 200; //等级上限，最高500
+            const level3Max = 200;  //等级上限，最高500
             // if (level3 * 2 + 7505 != cache3 + cache1) {
             //     if (cache3 == 7504) {
             //         cache1 = 1;

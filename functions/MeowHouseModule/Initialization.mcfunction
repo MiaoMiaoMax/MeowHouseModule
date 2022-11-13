@@ -25,7 +25,7 @@ scoreboard objectives add cache3 dummy 等级计算数据4
 
 scoreboard objectives add lifeTime dummy 生物寿命
 # scoreboard objectives add itemTime dummy 掉落物寿命
-scoreboard objectives add meowTps dummy tps
+scoreboard objectives add meowTick dummy
 scoreboard objectives add dotiledrops dummy
 
 scoreboard players set @e[type=meow:meow_mod,tag=Client] timing0 0
