@@ -27,10 +27,7 @@ const events3 = () => [
 
 /*+==================分==界==线==================+*/
 
-const events = (eve) => eve;/* 暴露执行接口 */
-
 export {
-    events,
     events1,
     events2,
     events3

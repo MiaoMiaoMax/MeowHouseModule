@@ -12,7 +12,7 @@ import { world } from "@minecraft/server";
 
 //log
 const log = (_) => {
-    world.say(`[§3MeowHouseModule§r] ${String(_)}`);                        //GT 1.0.0-beta 新写法
+    world.say(`[§3MeowHouseModule§r] ${""+_}`);                             //GT 1.0.0-beta 新写法
     // world.getDimension("overworld").runCommandAsync(`say ${String(_)}`); //GT 0.1.0 旧写法
 }
 
@@ -119,27 +119,26 @@ const removeMeowOpForPlayerEntity = (PlayerEntity, getLog) => {
 //getTime
 const getNowTime = () => {
     const now = new Date;
-    const timeY = `${now.getFullYear()}`.slice(2);  //年
-    let timeM;                                      //月
-    let timeD;                                      //日
-    let timeH;                                      //时
-    let timem;                                      //分
-    let timeS;                                      //秒
-    if ((now.getMonth() + 1) < 10) timeM = `0${now.getMonth() + 1}`;
-    else timeM = `${now.getMonth() + 1}`;
-    if (now.getDate() === 0) timeD = `00`;
-    else if (now.getDate() < 10) timeD = `0${now.getDate()}`;
-    else timeD = `${now.getDate()}`;
-    if (now.getHours() === 0) timeH = `00`;
-    else if (now.getHours() < 10) timeH = `0${now.getHours()}`;
-    else timeH = `${now.getHours()}`;
-    if (now.getMinutes() === 0) timem = `00`;
-    else if (now.getMinutes() < 10) timem = `0${now.getMinutes()}`;
-    else timem = `${now.getMinutes()}`;
-    if (now.getSeconds() === 0) timeS = `00`;
-    else if (now.getSeconds() < 10) timeS = `0${now.getSeconds()}`;
-    else timeS = `${now.getSeconds()}`;
-    return [timeY, timeM, timeD, timeH, timem, timeS];
+    const timeY = ("" + now.getFullYear()).slice(2);//年
+    let timeM = "";                                 //月
+    let timeD = "";                                 //日
+    let timeH = "";                                 //时
+    let timem = "";                                 //分
+    let timeS = "";                                 //秒
+    let times = "";                                 //毫秒
+    if ((now.getMonth() + 1) < 10) timeM = "0" + now.getMonth() + 1;
+    else timeM += now.getMonth() + 1;
+    if (now.getDate() < 10) timeD = "0" + now.getDate();
+    else timeD += now.getDate();
+    if (now.getHours() < 10) timeH = "0" + now.getHours();
+    else timeH += now.getHours();
+    if (now.getMinutes() < 10) timem = "0" + now.getMinutes();
+    else timem += now.getMinutes();
+    if (now.getSeconds() < 10) timeS = "0" + now.getSeconds();
+    else timeS += now.getSeconds();
+    if (now.getMilliseconds() < 100) times = "0" +now.getMilliseconds();
+    else times += now.getMilliseconds();
+    return [timeY, timeM, timeD, timeH, timem, timeS, times];
 }
 const getCurrentDate = () => {
     let now = getNowTime();
@@ -147,7 +146,11 @@ const getCurrentDate = () => {
 }
 const getCurrentTime = () => {
     let now = getNowTime();
-    return now[1] + now[2] + now[3] + now[4] + now[5];
+    return now[2] + now[3] + now[4] + now[5];
+}
+const getCurrentTimes = () => {
+    let now = getNowTime();
+    return now[3] + now[4] + now[5] + now[6];
 }
 
 //关于数值的相关操作
@@ -181,6 +184,7 @@ export {
     getNowTime,
     getCurrentDate,
     getCurrentTime,
+    getCurrentTimes,
     getRndInteger,
     arrSum,
     arrNonNegative

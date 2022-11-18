@@ -1,6 +1,7 @@
 effect @e[type=meow:meow_mod,name=§d§f§k§v§5§r§l§3刷新点§r] clear
 
 scoreboard players set @e[type=item,tag=!life] itemTime 1200
+scoreboard players remove @e[scores={itemTime=1..}] itemTime 1
 tag @e[type=item,tag=!life,scores={itemTime=0..}] add life
 execute as @e[scores={itemTime=200}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
 execute as @e[scores={itemTime=180}] at @s run particle minecraft:campfire_smoke_particle ~ ~1 ~
