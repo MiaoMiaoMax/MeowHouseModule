@@ -202,9 +202,24 @@ function blockBreak(meowEvent) {
                 queryNoThis.removeTag("bedrock");
             }
             if (queryNoThis.hasTag("barrel")) {
-                if (meowEvent.brokenBlockPermutation.type.id == "minecraft:barrel" && !playerGMC) {
-                    queryNoThis.runCommand("gamerule dotiledrops false");
-                    meow.methods.setScoreForEntity("dotiledrops", queryNoThis);
+                const entityIntensify = {
+                    type: "meow:meow_mod_chest",
+                    name: "宝箱",
+                    location: new mc.Location(meowEvent.block.x + 0.5, meowEvent.block.y, meowEvent.block.z + 0.5),
+                    closest: 1,
+                    maxDistance: 0.3
+                },
+                    meowChestQuery = meowEvent.dimension.getEntities(entityIntensify);
+                for (const meowChest of meowChestQuery) {
+                    meowChest.nameTag = "";
+                    const inventoryComponent = meowChest.getComponent("minecraft:inventory");
+                    const inventoryContainer = inventoryComponent.container;
+                    for(let i = 27; --i;) {
+                        const items = inventoryContainer.getItem(i);
+                        if (items != undefined) meowEvent.dimension.spawnItem(items, meowEvent.block.location);
+                    }
+                    meowChest.triggerEvent("meow:kill");
+                    break;
                 }
                 queryNoThis.removeTag("barrel");
             }
@@ -664,16 +679,11 @@ function dfksjC00(meowEvent, nowTime, queryNoThis, cache0, level3) {/* 宝箱 */
     }
 }
 function dfksjC01(meowEvent, loots, random0Max, random0Min = 1) {/* 宝箱-随机模块 */
-    let random0 = meow.methods.getRndInteger(random0Min, random0Max),
-        loot = null,
-        random1 = null;
-    const block = meowEvent.block;
-    /* block.setType(mc.MinecraftBlockTypes.barrel);
-    const barrelPermutation = block.permutation;
-    barrelPermutation.getProperty("facing_direction").value = 1;
-    block.setPermutation(barrelPermutation); */
-    block.setType(mc.MinecraftBlockTypes.trappedChest)
-    const inventoryComponent = block.getComponent("minecraft:inventory");
+    meowEvent.block.setType(mc.MinecraftBlockTypes.get("meow:meow_chest"));
+    const meowModChest = meowEvent.dimension.spawnEntity("meow:meow_mod_chest", meowEvent.block.location);
+    meowModChest.nameTag = "宝箱";
+    meowModChest.triggerEvent("meow:nameable_always_show");
+    const inventoryComponent = meowModChest.getComponent("minecraft:inventory");
     const inventoryContainer = inventoryComponent.container;
     inventoryContainer.setItem(meow.methods.getRndInteger(0, 25), new mc.ItemStack(mc.MinecraftItemTypes.apple, meow.methods.getRndInteger(1, 32), 0));
     
@@ -879,6 +889,7 @@ function piston(meowEvent) {
             case "minecraft:concretepowder":
             case "minecraft:dispenser":
             case "minecraft:dropper":
+            case "meow:meow_chest":
                 meowEvent.cancel = true;
                 // str += " §4是阻止对象";
                 // break;
