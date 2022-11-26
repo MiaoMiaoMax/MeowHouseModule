@@ -6,13 +6,37 @@
     http://creativecommons.org/licenses/by-nc-sa/4.0/
 */
 
-import * as methods from "./methods.js";
-
 /*+==================分==界==线==================+*/
 
 const chests1 = () => [
-    /* [随机权重, ["物品", 占用格数(可getRndInteger获得随机数), 每格最大数量, 特殊值, 每格最小数量(省略=默认1)], ...[第n个物品(n<28)]] */
-    [1, ["minecraft:apple", methods.getRndInteger(8, 10), 5, 0], ["minecraft:golden_apple", methods.getRndInteger(2, 5), 5, 0]]
+    [1, 
+        {
+            物品: "minecraft:apple",
+            名字: "这是一个苹果",
+            介绍: ["是的没错", "这确实是一个苹果"]
+        },
+        {
+            物品: "minecraft:apple",
+            名字: "这是一个桃子",
+            介绍: ["是的没错", "你在想桃子", "快去睡觉吧", "这是一个苹果"]
+        },
+        {
+            物品: "minecraft:iron_pickaxe",
+            附魔: [
+                [
+                    { 名字: "效率", 等级: "1" },
+                    { 名字: "效率", 等级: "2" }
+                ]
+
+                // { 名字: "随机", 等级: "随机" },
+                // { 名字: "随机", 等级: "随机" },
+                // { 名字: "随机", 等级: "随机" }
+
+                // { 名字: "效率", 等级: "1" },
+                // { 名字: "效率", 等级: "2" }
+            ]
+        }
+    ]
 ]
 
 const chests2 = () => [

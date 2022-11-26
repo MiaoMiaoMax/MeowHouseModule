@@ -6,8 +6,57 @@
     http://creativecommons.org/licenses/by-nc-sa/4.0/
 */
 
-export * as methods from "./meow/methods.js"
-export * as theEvents from "./meow/events.js"
-export * as theChests from "./meow/chests.js"
-export * as theEntitys from "./meow/entitys.js"
-export * as theBlocks from "./meow/blocks.js"
+export * as theEvents from "./meow/events.js";
+export * as theChests from "./meow/chests.js";
+export * as theEntitys from "./meow/entitys.js";
+export * as theBlocks from "./meow/blocks.js";
+
+import {
+    log, 
+    tyrScoreForName,
+    getScoreForName,
+    setScoreForName,
+    addScoreForName,
+    tyrScoreForEntity,
+    getScoreForEntity,
+    setScoreForEntity,
+    addScoreForEntity,
+    getNowTime,
+    getCurrentDate,
+    getCurrentTime,
+    getCurrentTimes,
+    getRndInteger,
+    arrSum,
+    arrNonNegative
+} from "./meow/methods.js";
+
+export {
+    log,
+    tyrScoreForName,
+    getScoreForName,
+    setScoreForName,
+    addScoreForName,
+    tyrScoreForEntity,
+    getScoreForEntity,
+    setScoreForEntity,
+    addScoreForEntity,
+    getNowTime,
+    getCurrentDate,
+    getCurrentTime,
+    getCurrentTimes,
+    getRndInteger,
+    arrSum,
+    arrNonNegative
+}
+
+import {
+    tryEnchantment,
+    randomEnchantment
+} from "./minecraft/enchantmentLists.js";
+
+const minecraft = {
+    tryEnchantment,
+    randomEnchantment
+}
+
+export { minecraft };

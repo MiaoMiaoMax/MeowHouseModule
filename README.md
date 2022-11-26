@@ -25,3 +25,5 @@
 > To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/4.0/
 
 > 食用方法详见[wiki](https://github.com/MiaoMiaoMax/MeowHouseModule/wiki)
+
+> 需要本地访问？不妨看看[Docs](./Docs/)(文档)文件夹说不定有你需要的。

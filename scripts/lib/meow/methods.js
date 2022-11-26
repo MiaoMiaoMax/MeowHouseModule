@@ -11,7 +11,7 @@ import { world } from "@minecraft/server";
 /*+==================分==界==线==================+*/
 
 //log
-const log = (_) => {
+const log = _ => {
     world.say(`[§3MeowHouseModule§r] ${""+_}`);                             //GT 1.0.0-beta 新写法
     // world.getDimension("overworld").runCommandAsync(`say ${String(_)}`); //GT 0.1.0 旧写法
 }
@@ -19,11 +19,11 @@ const log = (_) => {
 //Score: min=-2,147,483,648 max=2,147,483,647
 //ScoreForName
 const tyrScoreForName = (objective, name, getLog = false) => {
-    if (!world.scoreboard.getObjectives().find((_) => _.id == objective)) {
+    if (!world.scoreboard.getObjectives().find(_ => _.id == objective)) {
         if (getLog) log(`tyrScore:错误，目标记分板(${objective})不存在`);
         return "ScoreAU";
     }
-    if (!world.scoreboard.getObjective(objective).getScores().find((_) => _.participant.displayName == name)) {
+    if (!world.scoreboard.getObjective(objective).getScores().find(_ => _.participant.displayName == name)) {
         if (getLog) log(`tyrScore:错误，目标对象(${name})在目标记分板(${objective})中未定义分数`);
         return "ScoreBU";
     }
@@ -38,7 +38,7 @@ const getScoreForName = (objective, name, getLog = false, rectify = false, c = 0
         if (getLog) log(`自动纠正:已为目标对象(${name})在目标记分板(${objective})中定义分数(${c})`);
         return c;
     }
-    const score = world.scoreboard.getObjective(objective).getScores().find((_) => _.participant.displayName == name).score;
+    const score = world.scoreboard.getObjective(objective).getScores().find(_ => _.participant.displayName == name).score;
     if (getLog) log(`getScore:目标对象(${name})在目标记分板(${objective})中的分数为(${score})`);
     return score;
 }
@@ -60,11 +60,11 @@ const addScoreForName = (objective, name, c = 1, getLog = false, isReturn = fals
 
 //ScoreForEntity
 const tyrScoreForEntity = (objective, entity, getLog = false) => {
-    if (!world.scoreboard.getObjectives().find((_) => _?.id == objective)) {
+    if (!world.scoreboard.getObjectives().find(_ => _?.id == objective)) {
         if (getLog) log(`tyrScore:错误，目标记分板(${objective})不存在`);
         return "ScoreAU";
     }
-    if (!world.scoreboard.getObjective(objective).getScores().find((_) => _.participant.id == entity.scoreboard?.id)) {
+    if (!world.scoreboard.getObjective(objective).getScores().find(_ => _.participant.id == entity.scoreboard?.id)) {
         if (getLog) log(`tyrScore:错误，目标对象(${entity.id})在目标记分板(${objective})中未定义分数`);
         return "ScoreBU";
     }
@@ -79,7 +79,7 @@ const getScoreForEntity = (objective, entity, getLog = false, rectify = false, c
         if (getLog) log(`自动纠正:已为目标对象(${entity.id})在目标记分板(${objective})中定义分数(${c})`);
         return c;
     }
-    const score = world.scoreboard.getObjective(objective).getScores().find((_) => _.participant.id == entity.scoreboard.id).score;
+    const score = world.scoreboard.getObjective(objective).getScores().find(_ => _.participant.id == entity.scoreboard.id).score;
     if (getLog) log(score);
     return score;
 }
