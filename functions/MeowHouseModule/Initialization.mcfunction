@@ -6,10 +6,12 @@ scoreboard objectives add timing3 dummy 生物cd
 # scoreboard objectives add timing5 dummy
 scoreboard objectives add timingB dummy bedrock_cd
 
-scoreboard objectives add level0 dummy 玩家破坏方块数
-scoreboard objectives add level1 dummy 玩家单方块积分
+scoreboard objectives add level0 dummy 玩家方块敲掉数
+scoreboard objectives add level1 dummy 玩家方块放置数
 scoreboard objectives add level2 dummy 刷新点刷新数
 scoreboard objectives add level3 dummy 玩家单方块等级
+scoreboard objectives add level4 dummy 玩家单方块积分
+scoreboard objectives add level5 dummy 玩家单方块敲掉数
 
 scoreboard objectives add threshold0 dummy 事件阈值
 scoreboard objectives add threshold1 dummy 宝箱阈值

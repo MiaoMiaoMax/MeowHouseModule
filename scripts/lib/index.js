@@ -11,6 +11,8 @@ export * as theChests from "./meow/chests.js";
 export * as theEntitys from "./meow/entitys.js";
 export * as theBlocks from "./meow/blocks.js";
 
+export * as achievements from "./meow/achievements.js";
+
 import {
     log, 
     tyrScoreForName,
