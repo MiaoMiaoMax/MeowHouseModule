@@ -16,6 +16,7 @@ execute as @e[scores={itemTime=60}] at @s run particle meow:number3 ~ ~0.5 ~
 execute as @e[scores={itemTime=40}] at @s run particle meow:number2 ~ ~0.5 ~
 execute as @e[scores={itemTime=20}] at @s run particle meow:number1 ~ ~0.5 ~
 execute as @e[scores={itemTime=0}] at @s run particle meow:chaotic_fissure ~ ~0.5 ~
+execute as @e[scores={itemTime=0}] at @s run playsound event.chaotic_fissure @a ~~~
 kill @e[type=item,scores={itemTime=0}]
 
 scoreboard players remove @e[scores={lifeTime=1..}] lifeTime 1
@@ -40,6 +41,7 @@ execute as @e[family=!meow,scores={lifeTime=40}] at @s run particle meow:number2
 execute as @e[family=!meow,scores={lifeTime=20}] at @s run particle meow:number1 ~ ~2 ~
 execute as @e[family=!meow,scores={lifeTime=20}] at @s run particle meow:number1 ~ ~2 ~
 execute as @e[family=!meow,scores={lifeTime=0}] at @s run particle meow:chaotic_fissure ~ ~1 ~
+execute as @e[family=!meow,scores={lifeTime=0}] at @s run playsound event.chaotic_fissure @a ~~~
 kill @e[family=!meow,scores={lifeTime=0}]
 
 scoreboard players remove @e[scores={timingB=1..}] timingB 1

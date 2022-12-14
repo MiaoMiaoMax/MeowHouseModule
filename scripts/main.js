@@ -83,15 +83,15 @@ function ticks(meowEvent) {
     // log("awa");
     tps++;
     let now = meow.getCurrentTime();
-    while (tickSchedule.length > 0) {
-        let i = tickSchedule[0];
-        try {
-            i.f(...i.p);
-        } catch (error) {
-            meow.log(error);
-        } 
-        tickSchedule.pop();
-    }
+    // while (tickSchedule.length > 0) {
+    //     let i = tickSchedule[0];
+    //     try {
+    //         i.f(...i.p);
+    //     } catch (error) {
+    //         meow.log(error);
+    //     } 
+    //     tickSchedule.pop();
+    // }
     if (lastTime != now) {
         lastTime = now;
         // let nowTime = meow.getNowTime();
@@ -1045,7 +1045,7 @@ function explosion(meowEvent) {
     /* const explosionOptions = new mc.ExplosionOptions();
     explosionOptions.breaksBlocks = false;
     explosionOptions.source = meowEvent.source; */
-    const explodeNoBlocksLoc = meowEvent.source.location;
+    const explodeNoBlocksLoc = new mc.Location(meowEvent.source.location.x, meowEvent.source.location.y, meowEvent.source.location.z);
     let radius;
     switch (meowEvent.source.typeId) {
         case "minecraft:creeper":
@@ -1072,7 +1072,7 @@ function explosion(meowEvent) {
         default:
             radius = 5;
     }
-    const str = "§3dimension:§r" + meowEvent.dimension.id + " §2x:" + parseInt(meowEvent.source.location.x) + ", y:" + parseInt(meowEvent.source.location.y) + ", z:" + parseInt(meowEvent.source.location.z) + " §3source:§r" + meowEvent.source.id + " §3radius:§r" + radius;
+    const str = "§3dimension:§r" + meowEvent.dimension.id + " §2x:" + explodeNoBlocksLoc.x + ", y:" + explodeNoBlocksLoc.y + ", z:" + explodeNoBlocksLoc.z + " §3source:§r" + meowEvent.source.id + " §3radius:§r" + radius;
     log(str);
     // world.getDimension(meowEvent.dimension.id).createExplosion(explodeNoBlocksLoc, 15, explosionOptions);
     meowEvent.dimension.createExplosion(explodeNoBlocksLoc, radius, explosionOptions);
