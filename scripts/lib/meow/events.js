@@ -50,13 +50,15 @@ const dfksjE_bedrock = (meowEvent, queryNoThis) => {
     return false;
 }
 const dfksjE_justiceFromHeaven = (meowEvent, queryNoThis) => {
+    const playerLocation = meowEvent.player.location;
+    // const playerLocation = {x: meowEvent.player.location.x, y: meowEvent.player.location.y, z: meowEvent.player.location.z};
     queryNoThis.runCommandAsync(`say @${meowEvent.player.name},天降正义`);
     const explosionOptions = { breaksBlocks: false };
-    const explodeNoBlocksLoc = meowEvent.player.location;
+    const explodeNoBlocksLoc = playerLocation;
     meowEvent.dimension.createExplosion(explodeNoBlocksLoc, 5, explosionOptions);
-    meowEvent.dimension.spawnEntity("minecraft:lightning_bolt", meowEvent.player.location);
-    meowEvent.dimension.spawnEntity("minecraft:lightning_bolt", meowEvent.player.location);
-    meowEvent.dimension.spawnEntity("minecraft:lightning_bolt", meowEvent.player.location);
+    meowEvent.dimension.spawnEntity("minecraft:lightning_bolt", playerLocation);
+    meowEvent.dimension.spawnEntity("minecraft:lightning_bolt", playerLocation);
+    meowEvent.dimension.spawnEntity("minecraft:lightning_bolt", playerLocation);
     return true;
 }
 const dfksjE_bigSurprise = (meowEvent, queryNoThis) => {
@@ -69,8 +71,11 @@ const dfksjE_zombieSiege = (meowEvent, queryNoThis) => {
     queryNoThis.runCommandAsync(`say @${meowEvent.player.name},僵尸围岛`);
     for (let i = 11; --i;) {
         const zombie = meowEvent.dimension.spawnEntity("minecraft:zombie", meowEvent.player.location);
-        zombie.addEffect(mc.MinecraftEffectTypes.fireResistance, 12000, 0, false);
+        zombie.addEffect(mc.MinecraftEffectTypes.fireResistance, 12000, { amplifier: 0, showParticles: false });
         methods.setScoreForEntity("lifeTime", zombie, 2400);
+        // meowEvent.player.runCommandAsync("stopsound @s mob.zombie.say");
     }
+    methods.runCommand(meowEvent.player, "stopsound @s mob.zombie.say");
+    methods.runCommand(meowEvent.player, "playsound mob.zombie.say @s ~~~");
     return true;
 }

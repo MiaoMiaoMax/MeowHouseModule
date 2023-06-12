@@ -14,7 +14,8 @@ export * as theBlocks from "./meow/blocks.js";
 export * as achievements from "./meow/achievements.js";
 
 import {
-    log, 
+    log,
+    runCommand,
     tyrScoreForName,
     getScoreForName,
     setScoreForName,
@@ -23,6 +24,8 @@ import {
     getScoreForEntity,
     setScoreForEntity,
     addScoreForEntity,
+    Score,
+    score,
     getNowTime,
     getCurrentDate,
     getCurrentTime,
@@ -34,6 +37,7 @@ import {
 
 export {
     log,
+    runCommand,
     tyrScoreForName,
     getScoreForName,
     setScoreForName,
@@ -42,6 +46,8 @@ export {
     getScoreForEntity,
     setScoreForEntity,
     addScoreForEntity,
+    Score,
+    score,
     getNowTime,
     getCurrentDate,
     getCurrentTime,

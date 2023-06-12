@@ -6,50 +6,50 @@
     http://creativecommons.org/licenses/by-nc-sa/4.0/
 */
 
-import { Enchantment, MinecraftEnchantmentTypes } from "@minecraft/server";
+import { Enchantment, EnchantmentTypes } from "@minecraft/server";
 import { getRndInteger, log } from "../meow/methods.js"
 
 /*+==================分==界==线==================+*/
 
 const enchantmentLists = {
-    水下速掘: { id: "aquaAffinity", max: 1, return: MinecraftEnchantmentTypes.aquaAffinity },
-    节肢杀手: { id: "baneOfArthropods", max: 5, return: MinecraftEnchantmentTypes.baneOfArthropods },
-    绑定诅咒: { id: "binding", max: 1, return: MinecraftEnchantmentTypes.binding },
-    爆炸保护: { id: "blastProtection", max: 4, return: MinecraftEnchantmentTypes.blastProtection },
-    引雷: { id: "channeling", max: 1, return: MinecraftEnchantmentTypes.channeling },
-    深海探索者: { id: "depthStrider", max: 3, return: MinecraftEnchantmentTypes.depthStrider },
-    效率: { id: "efficiency", max: 5, return: MinecraftEnchantmentTypes.efficiency },
-    摔落保护: { id: "featherFalling", max: 4, return: MinecraftEnchantmentTypes.featherFalling },
-    火焰附加: { id: "fireAspect", max: 2, return: MinecraftEnchantmentTypes.fireAspect },
-    火焰保护: { id: "fireProtection", max: 4, return: MinecraftEnchantmentTypes.fireProtection },
-    火矢: { id: "flame", max: 1, return: MinecraftEnchantmentTypes.flame },
-    时运: { id: "fortune", max: 3, return: MinecraftEnchantmentTypes.fortune },
-    冰霜行者: { id: "frostWalker", max: 2, return: MinecraftEnchantmentTypes.frostWalker },
-    穿刺: { id: "impaling", max: 5, return: MinecraftEnchantmentTypes.impaling },
-    无限: { id: "infinity", max: 1, return: MinecraftEnchantmentTypes.infinity },
-    击退: { id: "knockback", max: 2, return: MinecraftEnchantmentTypes.knockback },
-    抢夺: { id: "looting", max: 3, return: MinecraftEnchantmentTypes.looting },
-    忠诚: { id: "loyalty", max: 3, return: MinecraftEnchantmentTypes.loyalty },
-    海之眷顾: { id: "luckOfTheSea", max: 3, return: MinecraftEnchantmentTypes.luckOfTheSea },
-    饵钓: { id: "lure", max: 3, return: MinecraftEnchantmentTypes.lure },
-    经验修补: { id: "mending", max: 1, return: MinecraftEnchantmentTypes.mending },
-    多重射击: { id: "multishot", max: 1, return: MinecraftEnchantmentTypes.multishot },
-    穿透: { id: "piercing", max: 4, return: MinecraftEnchantmentTypes.piercing },
-    力量: { id: "power", max: 5, return: MinecraftEnchantmentTypes.power },
-    弹射物保护: { id: "projectileProtection", max: 4, return: MinecraftEnchantmentTypes.projectileProtection },
-    保护: { id: "protection", max: 4, return: MinecraftEnchantmentTypes.protection },
-    冲击: { id: "punch", max: 2, return: MinecraftEnchantmentTypes.punch },
-    快速装填: { id: "quickCharge", max: 3, return: MinecraftEnchantmentTypes.quickCharge },
-    水下呼吸: { id: "respiration", max: 3, return: MinecraftEnchantmentTypes.respiration },
-    激流: { id: "riptide", max: 3, return: MinecraftEnchantmentTypes.riptide },
-    锋利: { id: "sharpness", max: 5, return: MinecraftEnchantmentTypes.sharpness },
-    精准采集: { id: "silkTouch", max: 1, return: MinecraftEnchantmentTypes.silkTouch },
-    亡灵杀手: { id: "smite", max: 5, return: MinecraftEnchantmentTypes.smite },
-    灵魂疾行: { id: "soulSpeed", max: 3, return: MinecraftEnchantmentTypes.soulSpeed },
-    迅捷潜行: { id: "swiftSneak", max: 3, return: MinecraftEnchantmentTypes.swiftSneak },
-    荆棘: { id: "thorns", max: 3, return: MinecraftEnchantmentTypes.thorns },
-    耐久: { id: "unbreaking", max: 3, return: MinecraftEnchantmentTypes.unbreaking },
-    消失诅咒: { id: "vanishing", max: 1, return: MinecraftEnchantmentTypes.vanishing }
+    水下速掘: { id: "aqua_affinity", max: 1 },
+    节肢杀手: { id: "bane_of_arthropods", max: 5 },
+    绑定诅咒: { id: "binding", max: 1 },
+    爆炸保护: { id: "blast_protection", max: 4 },
+    引雷: { id: "channeling", max: 1 },
+    深海探索者: { id: "depth_strider", max: 3 },
+    效率: { id: "efficiency", max: 5 },
+    摔落保护: { id: "feather_falling", max: 4 },
+    火焰附加: { id: "fire_aspect", max: 2 },
+    火焰保护: { id: "fire_protection", max: 4 },
+    火矢: { id: "flame", max: 1 },
+    时运: { id: "fortune", max: 3 },
+    冰霜行者: { id: "frost_walker", max: 2 },
+    穿刺: { id: "impaling", max: 5 },
+    无限: { id: "infinity", max: 1 },
+    击退: { id: "knockback", max: 2 },
+    抢夺: { id: "looting", max: 3 },
+    忠诚: { id: "loyalty", max: 3 },
+    海之眷顾: { id: "luck_of_the_sea", max: 3 },
+    饵钓: { id: "lure", max: 3 },
+    经验修补: { id: "mending", max: 1 },
+    多重射击: { id: "multishot", max: 1 },
+    穿透: { id: "piercing", max: 4 },
+    力量: { id: "power", max: 5 },
+    弹射物保护: { id: "projectile_protection", max: 4 },
+    保护: { id: "protection", max: 4 },
+    冲击: { id: "punch", max: 2 },
+    快速装填: { id: "quick_charge", max: 3 },
+    水下呼吸: { id: "respiration", max: 3 },
+    激流: { id: "riptide", max: 3 },
+    锋利: { id: "sharpness", max: 5 },
+    精准采集: { id: "silk_touch", max: 1 },
+    亡灵杀手: { id: "smite", max: 5 },
+    灵魂疾行: { id: "soul_speed", max: 3 },
+    迅捷潜行: { id: "swift_sneak", max: 3 },
+    荆棘: { id: "thorns", max: 3 },
+    耐久: { id: "unbreaking", max: 3 },
+    消失诅咒: { id: "vanishing", max: 1 }
 }
 const tryEnchantment = (name, level) => {
     if (name) {
@@ -76,7 +76,7 @@ const tryEnchantment = (name, level) => {
             if (level) log(`检测到系统正在使用附魔(${name})的等级(${level})不是有效输入，已自动纠正为1`);
             level = 1;
         }
-        return new Enchantment(enchantmentLists[name].return, level);
+        return new Enchantment(EnchantmentTypes.get(enchantmentLists[name].id), level);
     } else {
         log("检测到系统正在试图附魔空气");
         return false;
@@ -88,7 +88,7 @@ const randomEnchantment = (enchantmentList, level) => {
         if (Object.hasOwnProperty.call(enchantmentLists, key)) {
             const element = enchantmentLists[key];
             if (element.id == "mending") continue;/* 随机中排除经验修补 */
-            if (enchantmentList.canAddEnchantment(new Enchantment(element.return)) && enchantmentList.hasEnchantment(element.return) == 0) list.push(element);
+            if (enchantmentList.canAddEnchantment(new Enchantment(EnchantmentTypes.get(element.id))) && enchantmentList.hasEnchantment(EnchantmentTypes.get(element.id)) == 0) list.push(element);
         }
     }
     const random = getRndInteger(0, list.length - 1);
@@ -102,7 +102,7 @@ const randomEnchantment = (enchantmentList, level) => {
         if (level <= list[random].max);
         else level = list[random].max;
     } else level = 1;
-    return new Enchantment(list[random].return, level);
+    return new Enchantment(EnchantmentTypes.get(list[random].id), level);
 }
 
 /*+==================分==界==线==================+*/

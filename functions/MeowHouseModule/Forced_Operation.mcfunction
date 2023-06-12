@@ -40,7 +40,7 @@ execute as @e[family=!meow,scores={lifeTime=40}] at @s run particle meow:number2
 execute as @e[family=!meow,scores={lifeTime=40}] at @s run particle meow:number2 ~ ~2 ~
 execute as @e[family=!meow,scores={lifeTime=20}] at @s run particle meow:number1 ~ ~2 ~
 execute as @e[family=!meow,scores={lifeTime=20}] at @s run particle meow:number1 ~ ~2 ~
-execute as @e[family=!meow,scores={lifeTime=0}] at @s run particle meow:chaotic_fissure ~ ~1 ~
+execute as @e[family=!meow,scores={lifeTime=0}] at @s run particle meow:chaotic_fissure ~ ~0.5 ~
 execute as @e[family=!meow,scores={lifeTime=0}] at @s run playsound event.chaotic_fissure @a ~~~
 kill @e[family=!meow,scores={lifeTime=0}]
 

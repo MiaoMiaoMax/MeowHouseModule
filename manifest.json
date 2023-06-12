@@ -1,11 +1,11 @@
 {
 	"format_version": 2,
 	"header": {
-		"description": "§l§3CNQuanYeCha的MeowHouseModule(喵喵屋Module)\n§2MeowHouse(喵喵屋)的附属扩展模块\n§c注意：该模块适配游戏版本为1.19.50\n\n§f作者bilibili主页：\nhttps://space.bilibili.com/1968985335\n\n§f本作品采用知识共享署名-非商业性-相同方式共享 4.0 国际许可协议进行许可。 要查看此许可证的副本，请访问\nhttp://creativecommons.org/licenses/by-nc-sa/4.0/.\n\nThis work is licensed under the Creative Commons 署名-非商业性使用-相同方式共享 4.0 国际 License. To view a copy of this license, visit\nhttp://creativecommons.org/licenses/by-nc-sa/4.0/.",
+		"description": "§l§3CNQuanYeCha的MeowHouseModule(喵喵屋Module)\n§2MeowHouse(喵喵屋)的附属扩展模块\n§c注意：该模块适配游戏版本为1.20.0\n\n§f作者bilibili主页：\nhttps://space.bilibili.com/1968985335\n\n§f本作品采用知识共享署名-非商业性-相同方式共享 4.0 国际许可协议进行许可。 要查看此许可证的副本，请访问\nhttp://creativecommons.org/licenses/by-nc-sa/4.0/.\n\nThis work is licensed under the Creative Commons 署名-非商业性使用-相同方式共享 4.0 国际 License. To view a copy of this license, visit\nhttp://creativecommons.org/licenses/by-nc-sa/4.0/.",
 		"name": "MeowHouseModule(喵喵屋Module)",
 		"uuid": "38b776bd-961a-4ecc-a991-f7a23322d75e",
 		"version": [0, 0, 1],
-		"min_engine_version": [1, 19, 50]
+		"min_engine_version": [1, 20, 0]
 	},
 	"modules": [{
 		"description": "MeowHouseModule",
@@ -15,6 +15,7 @@
 		"version": [0, 0, 1],
 		"entry": "scripts/main.js"
 	}],
+	// "capabilities": [ "script_eval" ],// 用于启用 eval() and Function()
 	"dependencies": [
 		{
 			// MeowHouse(喵喵屋)
@@ -26,6 +27,10 @@
 			"module_name": "@minecraft/server",
 			// "uuid": "b26a4d4c-afdf-4690-88f8-931846312678",/
 			// "version": [1, 0, 0]
+			"version": "1.3.0-beta"
+		},
+		{
+			"module_name": "@minecraft/server-ui",
 			"version": "1.1.0-beta"
 		},
 		{

@@ -4,7 +4,7 @@
 > ## 关于这个模块
 > 本模块服务于[MeowHouse](https://github.com/MiaoMiaoMax/MeowHouse)(喵喵屋)
 >
-> #### 目前适配游戏版本为：1.19.40, 1.19.41 (之后的游戏版本也许可能可以运行?)
+> #### 目前适配游戏版本为：1.19.80, 1.19.83 (之后的游戏版本也许可能可以运行?)
 >
 > 由 [Script API](https://learn.microsoft.com/en-us/minecraft/creator/scriptapi/)(下的@minecraft/服务器模块，原GT框架) 与 [Functions](https://learn.microsoft.com/en-us/minecraft/creator/documents/functionsintroduction)(函数) 构建
 >
